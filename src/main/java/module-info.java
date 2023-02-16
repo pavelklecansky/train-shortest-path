@@ -5,4 +5,6 @@ module cz.klecansky.nndsa {
 
     opens cz.klecansky.nndsa to javafx.fxml;
     exports cz.klecansky.nndsa;
+    exports cz.klecansky.nndsa.io;
+    exports cz.klecansky.nndsa.graph;
 }
