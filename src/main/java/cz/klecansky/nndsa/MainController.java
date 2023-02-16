@@ -3,15 +3,21 @@ package cz.klecansky.nndsa;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
+import cz.klecansky.nndsa.utils.Triplet;
+import cz.klecansky.nndsa.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class MainController {
 
@@ -45,8 +51,7 @@ public class MainController {
     void importGraph(ActionEvent event) throws IOException {
         File fileFromFileChooser = getFileFromFileChooser();
         graph = importerCsv.importGraph(fileFromFileChooser);
-        verticesListView.getItems().addAll(graph.getVerticesKey());
-        edgeListView.getItems().addAll(graph.getEdges());
+        reloadLists();
         enableButtons();
     }
 
@@ -63,7 +68,12 @@ public class MainController {
 
     @FXML
     public void addEdge(ActionEvent actionEvent) {
-        System.out.println("addEdge");
+        Dialog<Triplet<String, String, Double>> dialog = Utils.edgeDialog(graph.getVerticesKey().stream().toList());
+        Optional<Triplet<String, String, Double>> result = dialog.showAndWait();
+        result.ifPresent(vertex -> {
+            graph.addEdge(vertex.getFirst(), vertex.getSecond(), vertex.getThird());
+            reloadLists();
+        });
     }
 
     @FXML
@@ -71,6 +81,16 @@ public class MainController {
         System.out.println("deleteEdge");
     }
 
+    private void reloadLists() {
+        verticesListView.getItems().clear();
+        edgeListView.getItems().clear();
+        List<String> verticesKey = new ArrayList<>(graph.getVerticesKey().stream().toList());
+        Utils.SortForVerticesAndEdges(verticesKey);
+        verticesListView.getItems().addAll(verticesKey);
+        List<String> edges = new ArrayList<>(graph.getEdges());
+        Utils.SortForVerticesAndEdges(edges);
+        edgeListView.getItems().addAll(edges);
+    }
 
     private void enableButtons() {
         addEdgeButton.setDisable(false);
