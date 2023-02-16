@@ -10,7 +10,7 @@ public interface Graph<K, V> {
 
     void addEdge(Edge<K, V> edge);
 
-    void deleteEdge(Edge<K, V> edge);
+    void deleteEdge(K first, K second);
 
     Set<K> getVerticesKey();
 

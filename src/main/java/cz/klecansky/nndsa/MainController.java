@@ -12,6 +12,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +79,12 @@ public class MainController {
 
     @FXML
     public void deleteEdge(ActionEvent actionEvent) {
-        System.out.println("deleteEdge");
+        Dialog<Pair<String, String>> dialog = Utils.removeEdgeDialog(graph.getVerticesKey().stream().toList());
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        result.ifPresent(vertex -> {
+            graph.deleteEdge(vertex.getKey(), vertex.getValue());
+            reloadLists();
+        });
     }
 
     private void reloadLists() {

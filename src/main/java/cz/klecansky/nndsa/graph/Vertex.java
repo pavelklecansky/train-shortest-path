@@ -35,6 +35,13 @@ public class Vertex<K, V> {
         edges.remove(edge);
     }
 
+    public void deleteEdge(K other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Other vertex key is null.");
+        }
+        edges.removeIf(edge -> edge.getSecond().getKey().equals(other));
+    }
+
     public boolean containsEdge(Edge<K, V> newEdge) {
         return this.edges.contains(newEdge);
     }

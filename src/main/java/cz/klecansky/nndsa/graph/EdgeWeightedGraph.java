@@ -51,12 +51,12 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void deleteEdge(Edge<K, V> edge) {
-        if (edge == null) {
+    public void deleteEdge(K first, K second) {
+        if (first == null || second == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
-        deleteEdgeFromSingleVertex(edge, edge.getFirst());
-        deleteEdgeFromSingleVertex(edge, edge.getSecond());
+        deleteEdgeFromSingleVertex(first, second);
+        deleteEdgeFromSingleVertex(second, first);
     }
 
     @Override
@@ -70,13 +70,17 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     private boolean isVertexNotInGraph(Vertex<K, V> vertex) {
-        return !vertices.containsKey(vertex.getKey());
+        return isVertexNotInGraph(vertex.getKey());
     }
 
-    private void deleteEdgeFromSingleVertex(Edge<K, V> edge, Vertex<K, V> vertex) {
-        if (isVertexNotInGraph(vertex)) {
+    private boolean isVertexNotInGraph(K vertexKey) {
+        return !vertices.containsKey(vertexKey);
+    }
+
+    private void deleteEdgeFromSingleVertex(K one, K other) {
+        if (isVertexNotInGraph(one) || isVertexNotInGraph(other)) {
             throw new IllegalArgumentException("Edge vertices are not in graph.");
         }
-        vertices.get(vertex.getKey()).deleteEdge(edge);
+        vertices.get(one).deleteEdge(other);
     }
 }
