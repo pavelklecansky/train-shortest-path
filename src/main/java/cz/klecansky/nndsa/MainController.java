@@ -1,6 +1,10 @@
 package cz.klecansky.nndsa;
 
+import cz.klecansky.nndsa.algorithms.DijkstraAlgorithm;
+import cz.klecansky.nndsa.algorithms.Dijsktra;
+import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Graph;
+import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
 import cz.klecansky.nndsa.utils.Triplet;
@@ -17,6 +21,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +41,7 @@ public class MainController {
     @FXML
     public ListView<String> edgeListView;
     public Button exportGraphButton;
+    public Button shortestPathButton;
     @FXML
     private Button importGraphButton;
 
@@ -87,13 +93,35 @@ public class MainController {
         });
     }
 
+    @FXML
+    public void shortestPath(ActionEvent actionEvent) {
+        Dialog<Pair<String, String>> dialog = Utils.shortestPathDialog(graph.getVerticesKey().stream().toList());
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+        result.ifPresent(vertex -> {
+//            Dijsktra dijsktra = new Dijsktra();
+//            Vertex<String, Integer> sourceVertex = graph.vertexByKey(vertex.getKey());
+//            dijsktra.computePath(sourceVertex);
+//            Vertex<String, Integer> targetVertex = graph.vertexByKey(vertex.getValue());
+//            List<Vertex<String, Integer>> shortestPathTo = dijsktra.getShortestPathTo(targetVertex);
+//            System.out.println(shortestPathTo);
+            DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(graph);
+            Vertex<String, Integer> sourceVertex = graph.vertexByKey(vertex.getKey());
+            dijkstraAlgorithm.execute(sourceVertex);
+            Vertex<String, Integer> targetVertex = graph.vertexByKey(vertex.getValue());
+            LinkedList<Vertex<String, Integer>> path = dijkstraAlgorithm.getPath(targetVertex);
+            System.out.println(path);
+        });
+
+    }
+
+
     private void reloadLists() {
         verticesListView.getItems().clear();
         edgeListView.getItems().clear();
         List<String> verticesKey = new ArrayList<>(graph.getVerticesKey().stream().toList());
         Utils.SortForVerticesAndEdges(verticesKey);
         verticesListView.getItems().addAll(verticesKey);
-        List<String> edges = new ArrayList<>(graph.getEdges());
+        List<String> edges = new ArrayList<>(graph.getEdges().stream().map(Edge::toString).toList());
         Utils.SortForVerticesAndEdges(edges);
         edgeListView.getItems().addAll(edges);
     }
@@ -103,6 +131,7 @@ public class MainController {
         addVertexButton.setDisable(false);
         deleteEdgeButton.setDisable(false);
         exportGraphButton.setDisable(false);
+        shortestPathButton.setDisable(false);
     }
 
     private File getFileFromFileChooser() {

@@ -1,8 +1,10 @@
 package cz.klecansky.nndsa.io;
 
+import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
+import cz.klecansky.nndsa.utils.Utils;
 
 import java.io.*;
 
@@ -20,8 +22,8 @@ public class ExporterCsv {
         for (String vertexKey : graph.getVerticesKey()) {
             stringBuilder.append(vertexKey).append("\n");
         }
-        stringBuilder.append("#edges#\n");
-        for (String edge : graph.getEdges()) {
+        stringBuilder.append(Utils.VERTICES_EDGES_DIVIDER).append("\n");
+        for (String edge : graph.getEdges().stream().map(Edge::toString).toList()) {
             stringBuilder.append(edge).append("\n");
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {

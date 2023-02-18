@@ -1,16 +1,18 @@
 package cz.klecansky.nndsa.graph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class Vertex<K, V> {
+public class Vertex<K, V> implements Comparable<Vertex>  {
 
     private final K key;
     private final V value;
 
     private final List<Edge<K, V>> edges;
+
+    private Vertex<K, V> previosVertex;
+    private boolean visited;
+    private double minDistance = Double.MAX_VALUE;
 
     public Vertex(K key, V value) {
         this.key = key;
@@ -39,7 +41,7 @@ public class Vertex<K, V> {
         if (other == null) {
             throw new IllegalArgumentException("Other vertex key is null.");
         }
-        edges.removeIf(edge -> edge.getSecond().getKey().equals(other));
+        edges.removeIf(edge -> edge.getTarget().getKey().equals(other));
     }
 
     public boolean containsEdge(Edge<K, V> newEdge) {
@@ -56,6 +58,30 @@ public class Vertex<K, V> {
 
     public V getValue() {
         return value;
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    public double getMinDistance() {
+        return minDistance;
+    }
+
+    public void setMinDistance(double minDistance) {
+        this.minDistance = minDistance;
+    }
+
+    public Vertex<K, V> getPreviosVertex() {
+        return previosVertex;
+    }
+
+    public void setPreviosVertex(Vertex<K, V> previosVertex) {
+        this.previosVertex = previosVertex;
     }
 
     @Override
@@ -76,5 +102,10 @@ public class Vertex<K, V> {
     @Override
     public int hashCode() {
         return key.hashCode();
+    }
+
+    @Override
+    public int compareTo(Vertex otherVertex) {
+        return Double.compare(this.minDistance, otherVertex.minDistance);
     }
 }

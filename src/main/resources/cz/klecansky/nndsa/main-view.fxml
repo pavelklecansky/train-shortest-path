@@ -38,6 +38,11 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
+            <Button fx:id="shortestPathButton" disable="true" mnemonicParsing="false" onAction="#shortestPath" prefHeight="25.0" prefWidth="140.0" text="Shortest path">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
          </children>
          <opaqueInsets>
             <Insets />

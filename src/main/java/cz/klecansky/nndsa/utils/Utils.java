@@ -12,6 +12,8 @@ import java.util.List;
 
 public final class Utils {
 
+    public static final String VERTICES_EDGES_DIVIDER = "#edges#";
+
     public static Dialog<Triplet<String, String, Double>> edgeDialog(List<String> vertices) {
         Dialog<Triplet<String, String, Double>> dialog = new Dialog<>();
         dialog.setTitle("Add edge");
@@ -57,11 +59,20 @@ public final class Utils {
     }
 
     public static Dialog<Pair<String, String>> removeEdgeDialog(List<String> vertices) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Remove edge");
-        dialog.setHeaderText("Remove edge from graph");
+        return getTwoEdgesDialog(vertices, "Remove edge", "Remove");
+    }
 
-        ButtonType addButtonType = new ButtonType("Remove", ButtonBar.ButtonData.OK_DONE);
+    public static Dialog<Pair<String, String>> shortestPathDialog(List<String> vertices) {
+        return getTwoEdgesDialog(vertices, "Shortest Path", "Calculate");
+    }
+
+
+    private static Dialog<Pair<String, String>> getTwoEdgesDialog(List<String> vertices, String title, String buttonText) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(title);
+
+        ButtonType addButtonType = new ButtonType(buttonText, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();

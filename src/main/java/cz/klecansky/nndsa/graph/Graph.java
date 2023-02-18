@@ -12,7 +12,10 @@ public interface Graph<K, V> {
 
     void deleteEdge(K first, K second);
 
+    Vertex<K, V> vertexByKey(K vertexKey);
+
     Set<K> getVerticesKey();
 
-    List<String> getEdges();
+    List<Edge<K, V>> getEdges();
+    List<Vertex<K, V>> getVertices();
 }

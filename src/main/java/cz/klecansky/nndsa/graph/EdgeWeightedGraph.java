@@ -47,7 +47,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
         if (edge == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
-        addEdge(edge.getFirst().getKey(), edge.getSecond().getKey(), edge.getWeight());
+        addEdge(edge.getStart().getKey(), edge.getTarget().getKey(), edge.getWeight());
     }
 
     @Override
@@ -60,13 +60,23 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
+    public Vertex<K, V> vertexByKey(K vertexKey) {
+        return vertices.get(vertexKey);
+    }
+
+    @Override
     public Set<K> getVerticesKey() {
         return vertices.keySet();
     }
 
     @Override
-    public List<String> getEdges() {
-        return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).map(Object::toString).toList();
+    public List<Edge<K, V>> getEdges() {
+        return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
+    }
+
+    @Override
+    public List<Vertex<K, V>> getVertices() {
+        return vertices.values().stream().toList();
     }
 
     private boolean isVertexNotInGraph(Vertex<K, V> vertex) {
