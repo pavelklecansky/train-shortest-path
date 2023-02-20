@@ -1,8 +1,7 @@
 package cz.klecansky.nndsa.graph;
 
-public class Edge<K, V> {
+public class Edge<K, V> implements Comparable<Edge<K, V>> {
     private final double weight;
-
     private final Vertex<K, V> start;
     private final Vertex<K, V> target;
 
@@ -49,5 +48,14 @@ public class Edge<K, V> {
         result = 31 * result + start.hashCode();
         result = 31 * result + target.hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(Edge other) {
+        if (other == null) {
+            return 1;
+        } else {
+            return Double.compare(other.weight, this.weight);
+        }
     }
 }

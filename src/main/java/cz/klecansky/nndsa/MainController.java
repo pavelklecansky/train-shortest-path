@@ -1,31 +1,37 @@
 package cz.klecansky.nndsa;
 
+import com.brunomnsilva.smartgraph.example.City;
+import com.brunomnsilva.smartgraph.example.Distance;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import cz.klecansky.nndsa.algorithms.DijkstraAlgorithm;
-import cz.klecansky.nndsa.algorithms.Dijsktra;
 import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
+import cz.klecansky.nndsa.ui.GraphUi;
+import cz.klecansky.nndsa.ui.Weight;
 import cz.klecansky.nndsa.utils.Triplet;
 import cz.klecansky.nndsa.utils.Utils;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.net.URL;
+import java.util.*;
 
-public class MainController {
+public class MainController implements Initializable {
 
     @FXML
     public HBox hbox;
@@ -40,26 +46,46 @@ public class MainController {
     public ListView<String> verticesListView;
     @FXML
     public ListView<String> edgeListView;
+    @FXML
     public Button exportGraphButton;
+    @FXML
     public Button shortestPathButton;
+    @FXML
+    public ListView<String> shortestPathListView;
     @FXML
     private Button importGraphButton;
 
     private final ImporterCsv importerCsv;
     private final ExporterCsv exporterCsv;
     private Graph<String, Integer> graph;
+    private SmartGraphPanel<String, Weight> graphUi;
 
     public MainController() {
         importerCsv = new ImporterCsv();
         exporterCsv = new ExporterCsv();
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        graphUi = GraphUi.getEmptyGraphUi();
+        hbox.getChildren().add(graphUi);
+        HBox.setHgrow(graphUi, Priority.ALWAYS);
+    }
+
     @FXML
     void importGraph(ActionEvent event) throws IOException {
         File fileFromFileChooser = getFileFromFileChooser();
         graph = importerCsv.importGraph(fileFromFileChooser);
-        reloadLists();
+        ChangeEmptyGraphUi(graph);
+        reloadUi();
         enableButtons();
+    }
+
+    private void ChangeEmptyGraphUi(Graph<String, Integer> graph) {
+        SmartGraphPanel<String, Weight> newGraphUi = GraphUi.getGraphUi(graph);
+        hbox.getChildren().set(hbox.getChildren().indexOf(graphUi), newGraphUi);
+        graphUi = newGraphUi;
+        HBox.setHgrow(graphUi, Priority.ALWAYS);
     }
 
     @FXML
@@ -79,7 +105,7 @@ public class MainController {
         Optional<Triplet<String, String, Double>> result = dialog.showAndWait();
         result.ifPresent(vertex -> {
             graph.addEdge(vertex.getFirst(), vertex.getSecond(), vertex.getThird());
-            reloadLists();
+            reloadUi();
         });
     }
 
@@ -89,7 +115,7 @@ public class MainController {
         Optional<Pair<String, String>> result = dialog.showAndWait();
         result.ifPresent(vertex -> {
             graph.deleteEdge(vertex.getKey(), vertex.getValue());
-            reloadLists();
+            reloadUi();
         });
     }
 
@@ -109,13 +135,12 @@ public class MainController {
             dijkstraAlgorithm.execute(sourceVertex);
             Vertex<String, Integer> targetVertex = graph.vertexByKey(vertex.getValue());
             LinkedList<Vertex<String, Integer>> path = dijkstraAlgorithm.getPath(targetVertex);
-            System.out.println(path);
+            shortestPathListView.getItems().clear();
+            shortestPathListView.getItems().addAll(path.stream().map(Vertex::getKey).toList());
         });
-
     }
 
-
-    private void reloadLists() {
+    private void reloadUi() {
         verticesListView.getItems().clear();
         edgeListView.getItems().clear();
         List<String> verticesKey = new ArrayList<>(graph.getVerticesKey().stream().toList());
@@ -124,6 +149,9 @@ public class MainController {
         List<String> edges = new ArrayList<>(graph.getEdges().stream().map(Edge::toString).toList());
         Utils.SortForVerticesAndEdges(edges);
         edgeListView.getItems().addAll(edges);
+        Platform.runLater(() -> {
+            graphUi.init();
+        });
     }
 
     private void enableButtons() {
@@ -149,6 +177,4 @@ public class MainController {
         fileChooser.setInitialDirectory(new File("."));
         return fileChooser.showSaveDialog(hbox.getScene().getWindow());
     }
-
-
 }

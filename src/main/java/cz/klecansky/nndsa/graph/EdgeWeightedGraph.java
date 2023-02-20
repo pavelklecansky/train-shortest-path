@@ -1,16 +1,15 @@
 package cz.klecansky.nndsa.graph;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
 
     private final Map<K, Vertex<K, V>> vertices;
+    private final List<Edge<K, V>> undirectedEdges;
 
     public EdgeWeightedGraph() {
         vertices = new HashMap<>();
+        undirectedEdges = new ArrayList<>();
     }
 
     @Override
@@ -38,6 +37,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
         Edge<K, V> firstEdge = new Edge<>(firstVertex, secondVertex, weight);
         Edge<K, V> secondEdge = new Edge<>(secondVertex, firstVertex, weight);
 
+        undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
         secondVertex.addEdge(secondEdge);
     }
@@ -77,6 +77,11 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     @Override
     public List<Vertex<K, V>> getVertices() {
         return vertices.values().stream().toList();
+    }
+
+    @Override
+    public List<Edge<K, V>> getUndirectedEdges(){
+        return undirectedEdges;
     }
 
     private boolean isVertexNotInGraph(Vertex<K, V> vertex) {

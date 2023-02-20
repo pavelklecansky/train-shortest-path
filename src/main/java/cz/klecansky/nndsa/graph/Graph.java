@@ -18,4 +18,6 @@ public interface Graph<K, V> {
 
     List<Edge<K, V>> getEdges();
     List<Vertex<K, V>> getVertices();
+
+    List<Edge<K, V>> getUndirectedEdges();
 }
