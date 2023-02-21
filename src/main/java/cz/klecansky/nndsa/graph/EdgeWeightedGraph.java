@@ -13,14 +13,14 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void addVertex(Vertex<K, V> vertex) {
-        if (vertex == null) {
+    public void addVertex(K key, V value) {
+        if (key == null || value == null) {
             throw new IllegalArgumentException("Vertex is null.");
         }
-        if (vertices.containsKey(vertex.getKey())) {
+        if (vertices.containsKey(key)) {
             throw new IllegalArgumentException("Vertex with this key is already in graph.");
         }
-        vertices.put(vertex.getKey(), vertex);
+        vertices.put(key, new Vertex<>(key, value));
     }
 
     @Override
@@ -40,14 +40,6 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
         undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
         secondVertex.addEdge(secondEdge);
-    }
-
-    @Override
-    public void addEdge(Edge<K, V> edge) {
-        if (edge == null) {
-            throw new IllegalArgumentException("Edge is null.");
-        }
-        addEdge(edge.getStart().getKey(), edge.getTarget().getKey(), edge.getValue());
     }
 
     @Override
@@ -80,7 +72,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public List<Edge<K, V>> getUndirectedEdges(){
+    public List<Edge<K, V>> getUndirectedEdges() {
         return undirectedEdges;
     }
 

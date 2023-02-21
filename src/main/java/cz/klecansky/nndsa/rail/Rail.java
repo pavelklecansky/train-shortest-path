@@ -29,4 +29,9 @@ public class Rail {
     public void setLength(double length) {
         this.length = length;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(length);
+    }
 }

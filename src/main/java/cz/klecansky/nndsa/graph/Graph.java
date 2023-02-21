@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 public interface Graph<K, V> {
-    void addVertex(Vertex<K, V> vertex);
+    void addVertex(K key, V value);
 
     void addEdge(K firstVertex, K secondVertex, V value);
-
-    void addEdge(Edge<K, V> edge);
 
     void deleteEdge(K first, K second);
 

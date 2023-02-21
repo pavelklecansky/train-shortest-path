@@ -5,19 +5,20 @@ import com.brunomnsilva.smartgraph.graph.GraphEdgeList;
 import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrategy;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
-import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.rail.Rail;
+import cz.klecansky.nndsa.rail.RailwayInfrastructure;
+import cz.klecansky.nndsa.utils.Triplet;
 
 public class GraphUi {
-    public static SmartGraphPanel<String, Weight> getGraphUi(cz.klecansky.nndsa.graph.Graph<String, Rail> graph) {
+    public static SmartGraphPanel<String, Weight> getGraphUi(RailwayInfrastructure railwayInfrastructure) {
         Graph<String, Weight> distances = new GraphEdgeList<>();
 
-        for (String vertex : graph.getVerticesKey()) {
+        for (String vertex : railwayInfrastructure.getSwitchNames()) {
             distances.insertVertex(vertex);
         }
 
-        for (Edge<String, Rail> edge : graph.getUndirectedEdges()) {
-            distances.insertEdge(edge.getTarget().getKey(), edge.getStart().getKey(), new Weight(edge.getValue().getLength()));
+        for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getRailsDetailInfo()) {
+            distances.insertEdge(triplet.getFirst(), triplet.getSecond(), new Weight(triplet.getThird().getLength()));
         }
 
         /* Only Java 15 allows for multi-line strings */
