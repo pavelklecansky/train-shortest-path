@@ -9,6 +9,7 @@ import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
+import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
 import cz.klecansky.nndsa.utils.Triplet;
@@ -57,7 +58,7 @@ public class MainController implements Initializable {
 
     private final ImporterCsv importerCsv;
     private final ExporterCsv exporterCsv;
-    private Graph<String, Integer> graph;
+    private Graph<String, Rail> graph;
     private SmartGraphPanel<String, Weight> graphUi;
 
     public MainController() {
@@ -81,7 +82,7 @@ public class MainController implements Initializable {
         enableButtons();
     }
 
-    private void ChangeEmptyGraphUi(Graph<String, Integer> graph) {
+    private void ChangeEmptyGraphUi(Graph<String, Rail> graph) {
         SmartGraphPanel<String, Weight> newGraphUi = GraphUi.getGraphUi(graph);
         hbox.getChildren().set(hbox.getChildren().indexOf(graphUi), newGraphUi);
         graphUi = newGraphUi;
@@ -104,7 +105,7 @@ public class MainController implements Initializable {
         Dialog<Triplet<String, String, Double>> dialog = Utils.edgeDialog(graph.getVerticesKey().stream().toList());
         Optional<Triplet<String, String, Double>> result = dialog.showAndWait();
         result.ifPresent(vertex -> {
-            graph.addEdge(vertex.getFirst(), vertex.getSecond(), vertex.getThird());
+            graph.addEdge(vertex.getFirst(), vertex.getSecond(), new Rail(vertex.getThird()));
             reloadUi();
         });
     }
@@ -131,10 +132,10 @@ public class MainController implements Initializable {
 //            List<Vertex<String, Integer>> shortestPathTo = dijsktra.getShortestPathTo(targetVertex);
 //            System.out.println(shortestPathTo);
             DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(graph);
-            Vertex<String, Integer> sourceVertex = graph.vertexByKey(vertex.getKey());
+            Vertex<String, Rail> sourceVertex = graph.vertexByKey(vertex.getKey());
             dijkstraAlgorithm.execute(sourceVertex);
-            Vertex<String, Integer> targetVertex = graph.vertexByKey(vertex.getValue());
-            LinkedList<Vertex<String, Integer>> path = dijkstraAlgorithm.getPath(targetVertex);
+            Vertex<String, Rail> targetVertex = graph.vertexByKey(vertex.getValue());
+            LinkedList<Vertex<String, Rail>> path = dijkstraAlgorithm.getPath(targetVertex);
             shortestPathListView.getItems().clear();
             shortestPathListView.getItems().addAll(path.stream().map(Vertex::getKey).toList());
         });

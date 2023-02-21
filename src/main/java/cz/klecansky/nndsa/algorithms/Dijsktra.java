@@ -2,23 +2,24 @@ package cz.klecansky.nndsa.algorithms;
 
 import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Vertex;
+import cz.klecansky.nndsa.rail.Rail;
 
 import java.util.*;
 
 public class Dijsktra {
 
-    public void computePath(Vertex<String, Integer> sourceVertex) {
+    public void computePath(Vertex<String, Rail> sourceVertex) {
         sourceVertex.setMinDistance(0);
-        PriorityQueue<Vertex<String, Integer>> priorityQueue = new PriorityQueue<>();
+        PriorityQueue<Vertex<String, Rail>> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(sourceVertex);
         double allWeight = 0;
 
         while (!priorityQueue.isEmpty()) {
-            Vertex<String, Integer> vertex = priorityQueue.poll();
+            Vertex<String, Rail> vertex = priorityQueue.poll();
 
-            for (Edge<String, Integer> edge : vertex.getEdges()) {
-                Vertex<String, Integer> v = edge.getTarget();
-                double weight = edge.getWeight();
+            for (Edge<String, Rail> edge : vertex.getEdges()) {
+                Vertex<String, Rail> v = edge.getTarget();
+                double weight = edge.getValue().getLength();
                 double minDistance = vertex.getMinDistance() + weight;
 
                 if (minDistance < v.getMinDistance()) {

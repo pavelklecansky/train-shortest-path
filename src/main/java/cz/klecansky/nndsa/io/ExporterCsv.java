@@ -1,9 +1,8 @@
 package cz.klecansky.nndsa.io;
 
 import cz.klecansky.nndsa.graph.Edge;
-import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
-import cz.klecansky.nndsa.graph.Vertex;
+import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.utils.Utils;
 
 import java.io.*;
@@ -11,7 +10,7 @@ import java.io.*;
 public class ExporterCsv {
 
     // TODO ještě se rozhodnout jak to bude s tím exportem hran(edges)
-    public void exportGraph(File file, Graph<String, Integer> graph) throws IOException {
+    public void exportGraph(File file, Graph<String, Rail> graph) throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("File is null.");
         }

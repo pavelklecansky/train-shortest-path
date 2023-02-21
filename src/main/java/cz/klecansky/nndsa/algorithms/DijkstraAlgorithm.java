@@ -3,25 +3,26 @@ package cz.klecansky.nndsa.algorithms;
 import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
+import cz.klecansky.nndsa.rail.Rail;
 
 import java.util.*;
 
 public class DijkstraAlgorithm {
 
-    private final List<Vertex<String, Integer>> nodes;
-    private final List<Edge<String, Integer>> edges;
-    private Set<Vertex<String, Integer>> settledNodes;
-    private Set<Vertex<String, Integer>> unSettledNodes;
-    private Map<Vertex<String, Integer>, Vertex<String, Integer>> predecessors;
-    private Map<Vertex<String, Integer>, Integer> distance;
+    private final List<Vertex<String, Rail>> nodes;
+    private final List<Edge<String, Rail>> edges;
+    private Set<Vertex<String, Rail>> settledNodes;
+    private Set<Vertex<String, Rail>> unSettledNodes;
+    private Map<Vertex<String, Rail>, Vertex<String, Rail>> predecessors;
+    private Map<Vertex<String, Rail>, Integer> distance;
 
-    public DijkstraAlgorithm(Graph<String, Integer> graph) {
+    public DijkstraAlgorithm(Graph<String, Rail> graph) {
         // create a copy of the array so that we can operate on this array
         this.nodes = new ArrayList<>(graph.getVertices());
         this.edges = new ArrayList<>(graph.getEdges());
     }
 
-    public void execute(Vertex<String, Integer> source) {
+    public void execute(Vertex<String, Rail> source) {
         settledNodes = new HashSet<>();
         unSettledNodes = new HashSet<>();
         distance = new HashMap<>();
@@ -29,16 +30,16 @@ public class DijkstraAlgorithm {
         distance.put(source, 0);
         unSettledNodes.add(source);
         while (unSettledNodes.size() > 0) {
-            Vertex<String, Integer> node = getMinimum(unSettledNodes);
+            Vertex<String, Rail> node = getMinimum(unSettledNodes);
             settledNodes.add(node);
             unSettledNodes.remove(node);
             findMinimalDistances(node);
         }
     }
 
-    private void findMinimalDistances(Vertex<String, Integer> node) {
-        List<Vertex<String, Integer>> adjacentNodes = getNeighbors(node);
-        for (Vertex<String, Integer> target : adjacentNodes) {
+    private void findMinimalDistances(Vertex<String, Rail> node) {
+        List<Vertex<String, Rail>> adjacentNodes = getNeighbors(node);
+        for (Vertex<String, Rail> target : adjacentNodes) {
             if (getShortestDistance(target) > getShortestDistance(node)
                     + getDistance(node, target)) {
                 distance.put(target, getShortestDistance(node)
@@ -50,19 +51,19 @@ public class DijkstraAlgorithm {
 
     }
 
-    private int getDistance(Vertex<String, Integer> node, Vertex<String, Integer> target) {
-        for (Edge<String, Integer> edge : edges) {
+    private int getDistance(Vertex<String, Rail> node, Vertex<String, Rail> target) {
+        for (Edge<String, Rail> edge : edges) {
             if (edge.getStart().equals(node)
                     && edge.getTarget().equals(target)) {
-                return (int) edge.getWeight();
+                return (int) edge.getValue().getLength();
             }
         }
         throw new RuntimeException("Should not happen");
     }
 
-    private List<Vertex<String, Integer>> getNeighbors(Vertex<String, Integer> node) {
-        List<Vertex<String, Integer>> neighbors = new ArrayList<>();
-        for (Edge<String, Integer> edge : edges) {
+    private List<Vertex<String, Rail>> getNeighbors(Vertex<String, Rail> node) {
+        List<Vertex<String, Rail>> neighbors = new ArrayList<>();
+        for (Edge<String, Rail> edge : edges) {
             if (edge.getStart().equals(node)
                     && !isSettled(edge.getTarget())) {
                 neighbors.add(edge.getTarget());
@@ -71,9 +72,9 @@ public class DijkstraAlgorithm {
         return neighbors;
     }
 
-    private Vertex<String, Integer> getMinimum(Set<Vertex<String, Integer>> vertexes) {
-        Vertex<String, Integer> minimum = null;
-        for (Vertex<String, Integer> vertex : vertexes) {
+    private Vertex<String, Rail> getMinimum(Set<Vertex<String, Rail>> vertexes) {
+        Vertex<String, Rail> minimum = null;
+        for (Vertex<String, Rail> vertex : vertexes) {
             if (minimum == null) {
                 minimum = vertex;
             } else {
@@ -85,11 +86,11 @@ public class DijkstraAlgorithm {
         return minimum;
     }
 
-    private boolean isSettled(Vertex<String, Integer> vertex) {
+    private boolean isSettled(Vertex<String, Rail> vertex) {
         return settledNodes.contains(vertex);
     }
 
-    private int getShortestDistance(Vertex<String, Integer> destination) {
+    private int getShortestDistance(Vertex<String, Rail> destination) {
         Integer d = distance.get(destination);
         return Objects.requireNonNullElse(d, Integer.MAX_VALUE);
     }
@@ -98,9 +99,9 @@ public class DijkstraAlgorithm {
      * This method returns the path from the source to the selected target and
      * NULL if no path exists
      */
-    public LinkedList<Vertex<String, Integer>> getPath(Vertex<String, Integer> target) {
-        LinkedList<Vertex<String, Integer>> path = new LinkedList<>();
-        Vertex<String, Integer> step = target;
+    public LinkedList<Vertex<String, Rail>> getPath(Vertex<String, Rail> target) {
+        LinkedList<Vertex<String, Rail>> path = new LinkedList<>();
+        Vertex<String, Rail> step = target;
         // check if a path exists
         if (predecessors.get(step) == null) {
             return null;

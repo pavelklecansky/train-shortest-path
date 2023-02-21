@@ -6,17 +6,18 @@ import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrateg
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
 import cz.klecansky.nndsa.graph.Edge;
+import cz.klecansky.nndsa.rail.Rail;
 
 public class GraphUi {
-    public static SmartGraphPanel<String, Weight> getGraphUi(cz.klecansky.nndsa.graph.Graph<String, Integer> graph) {
+    public static SmartGraphPanel<String, Weight> getGraphUi(cz.klecansky.nndsa.graph.Graph<String, Rail> graph) {
         Graph<String, Weight> distances = new GraphEdgeList<>();
 
         for (String vertex : graph.getVerticesKey()) {
             distances.insertVertex(vertex);
         }
 
-        for (Edge<String, Integer> edge : graph.getUndirectedEdges()) {
-            distances.insertEdge(edge.getTarget().getKey(), edge.getStart().getKey(), new Weight(edge.getWeight()));
+        for (Edge<String, Rail> edge : graph.getUndirectedEdges()) {
+            distances.insertEdge(edge.getTarget().getKey(), edge.getStart().getKey(), new Weight(edge.getValue().getLength()));
         }
 
         /* Only Java 15 allows for multi-line strings */

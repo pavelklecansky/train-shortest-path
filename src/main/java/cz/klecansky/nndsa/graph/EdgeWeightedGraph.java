@@ -24,7 +24,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void addEdge(K firstVertexKey, K secondVertexKey, double weight) {
+    public void addEdge(K firstVertexKey, K secondVertexKey, V value) {
         if (firstVertexKey == null && secondVertexKey == null) {
             throw new IllegalArgumentException("Vertex keys are null.");
         }
@@ -34,8 +34,8 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
         Vertex<K, V> firstVertex = vertices.get(firstVertexKey);
         Vertex<K, V> secondVertex = vertices.get(secondVertexKey);
 
-        Edge<K, V> firstEdge = new Edge<>(firstVertex, secondVertex, weight);
-        Edge<K, V> secondEdge = new Edge<>(secondVertex, firstVertex, weight);
+        Edge<K, V> firstEdge = new Edge<>(firstVertex, secondVertex, value);
+        Edge<K, V> secondEdge = new Edge<>(secondVertex, firstVertex, value);
 
         undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
@@ -47,7 +47,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
         if (edge == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
-        addEdge(edge.getStart().getKey(), edge.getTarget().getKey(), edge.getWeight());
+        addEdge(edge.getStart().getKey(), edge.getTarget().getKey(), edge.getValue());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cz.klecansky.nndsa.ui;
 
+import cz.klecansky.nndsa.rail.Rail;
+
 public class Weight {
     private double weight;
 
