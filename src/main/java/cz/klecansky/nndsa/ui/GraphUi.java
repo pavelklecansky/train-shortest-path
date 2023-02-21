@@ -24,13 +24,13 @@ public class GraphUi {
         String customProps = "edge.label = true" + "\n" + "edge.arrow = false";
 
         SmartGraphProperties properties = new SmartGraphProperties(customProps);
-        SmartGraphPanel<String, Weight> cityDistanceSmartGraphPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
-        cityDistanceSmartGraphPanel.setMinWidth(400);
-        cityDistanceSmartGraphPanel.setMinHeight(400);
-        cityDistanceSmartGraphPanel.prefWidth(1300);
-        cityDistanceSmartGraphPanel.prefHeight(1000);
+        SmartGraphPanel<String, Weight> railwayPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
+        railwayPanel.setMinWidth(400);
+        railwayPanel.setMinHeight(400);
+        railwayPanel.prefWidth(1300);
+        railwayPanel.prefHeight(1000);
 
-        return cityDistanceSmartGraphPanel;
+        return railwayPanel;
     }
 
     public static SmartGraphPanel<String, Weight> getEmptyGraphUi() {
@@ -40,12 +40,12 @@ public class GraphUi {
         String customProps = "edge.label = true" + "\n" + "edge.arrow = false";
 
         SmartGraphProperties properties = new SmartGraphProperties(customProps);
-        SmartGraphPanel<String, Weight> cityDistanceSmartGraphPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
-        cityDistanceSmartGraphPanel.setMinWidth(400);
-        cityDistanceSmartGraphPanel.setMinHeight(400);
-        cityDistanceSmartGraphPanel.prefWidth(1300);
-        cityDistanceSmartGraphPanel.prefHeight(1000);
+        SmartGraphPanel<String, Weight> railwayPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
+        railwayPanel.setMinWidth(400);
+        railwayPanel.setMinHeight(400);
+        railwayPanel.prefWidth(1300);
+        railwayPanel.prefHeight(1000);
 
-        return cityDistanceSmartGraphPanel;
+        return railwayPanel;
     }
 }
