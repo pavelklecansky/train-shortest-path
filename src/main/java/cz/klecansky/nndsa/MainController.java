@@ -1,13 +1,10 @@
 package cz.klecansky.nndsa;
 
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
-import cz.klecansky.nndsa.algorithms.DijkstraAlgorithm;
-import cz.klecansky.nndsa.graph.Edge;
-import cz.klecansky.nndsa.graph.Graph;
-import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
 import cz.klecansky.nndsa.rail.Rail;
+import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
 import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
@@ -35,24 +32,24 @@ public class MainController implements Initializable {
     @FXML
     public HBox hbox;
     @FXML
-    public Button addVertexButton;
+    public Button addRailSwitchButton;
     @FXML
-    public Button addEdgeButton;
+    public Button addRailButton;
     @FXML
-    public Button deleteEdgeButton;
+    public Button deleteRailButton;
 
     @FXML
-    public ListView<String> verticesListView;
+    public ListView<String> railSwitchListView;
     @FXML
-    public ListView<String> edgeListView;
+    public ListView<String> railListView;
     @FXML
-    public Button exportGraphButton;
+    public Button exportRailwayInfrastructureButton;
     @FXML
     public Button shortestPathButton;
     @FXML
     public ListView<String> shortestPathListView;
     @FXML
-    private Button importGraphButton;
+    private Button importRailwayInfrastructureButton;
 
     private final ImporterCsv importerCsv;
     private final ExporterCsv exporterCsv;
@@ -72,7 +69,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void importGraph(ActionEvent event) throws IOException {
+    void importRailwayInfrastructure(ActionEvent event) throws IOException {
         File fileFromFileChooser = getFileFromFileChooser();
         railwayInfrastructure = importerCsv.importRailwayInfrastructure(fileFromFileChooser);
         ChangeEmptyGraphUi(railwayInfrastructure);
@@ -88,19 +85,19 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void exportGraph(ActionEvent actionEvent) throws IOException {
+    public void exportRailwayInfrastructure(ActionEvent actionEvent) throws IOException {
         File fileForSaveFromFileChooser = getFileForSaveFromFileChooser();
         exporterCsv.exportGraph(fileForSaveFromFileChooser, railwayInfrastructure);
     }
 
     @FXML
-    public void addVertex(ActionEvent actionEvent) {
+    public void addRailSwitch(ActionEvent actionEvent) {
         System.out.println("addVertex");
     }
 
     @FXML
-    public void addEdge(ActionEvent actionEvent) {
-        Dialog<Triplet<String, String, Double>> dialog = Utils.edgeDialog(railwayInfrastructure.getSwitchNames().stream().toList());
+    public void addRail(ActionEvent actionEvent) {
+        Dialog<Triplet<String, String, Double>> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<Triplet<String, String, Double>> result = dialog.showAndWait();
         result.ifPresent(vertex -> {
             railwayInfrastructure.addRail(vertex.getFirst(), vertex.getSecond(), new Rail(vertex.getThird()));
@@ -109,8 +106,8 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void deleteEdge(ActionEvent actionEvent) {
-        Dialog<Pair<String, String>> dialog = Utils.removeEdgeDialog(railwayInfrastructure.getSwitchNames().stream().toList());
+    public void deleteRail(ActionEvent actionEvent) {
+        Dialog<Pair<String, String>> dialog = Utils.removeEdgeDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<Pair<String, String>> result = dialog.showAndWait();
         result.ifPresent(rail -> {
             railwayInfrastructure.deleteRail(rail.getKey(), rail.getValue());
@@ -120,7 +117,7 @@ public class MainController implements Initializable {
 
     @FXML
     public void shortestPath(ActionEvent actionEvent) {
-        Dialog<Pair<String, String>> dialog = Utils.shortestPathDialog(railwayInfrastructure.getSwitchNames().stream().toList());
+        Dialog<Pair<String, String>> dialog = Utils.shortestPathDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<Pair<String, String>> result = dialog.showAndWait();
         result.ifPresent(vertex -> {
 //            Dijsktra dijsktra = new Dijsktra();
@@ -140,24 +137,24 @@ public class MainController implements Initializable {
     }
 
     private void reloadUi() {
-        verticesListView.getItems().clear();
-        edgeListView.getItems().clear();
-        List<String> verticesKey = new ArrayList<>(railwayInfrastructure.getSwitchNames().stream().toList());
-        Utils.SortForVerticesAndEdges(verticesKey);
-        verticesListView.getItems().addAll(verticesKey);
+        railSwitchListView.getItems().clear();
+        railListView.getItems().clear();
+        List<String> verticesKey = new ArrayList<>(railwayInfrastructure.getSwitches().stream().map(RailSwitch::toString).toList());
+        Utils.SortForRailsAndRailsSwitches(verticesKey);
+        railSwitchListView.getItems().addAll(verticesKey);
         List<String> edges = new ArrayList<>(railwayInfrastructure.getRailsInfo().stream().toList());
-        Utils.SortForVerticesAndEdges(edges);
-        edgeListView.getItems().addAll(edges);
+        Utils.SortForRailsAndRailsSwitches(edges);
+        railListView.getItems().addAll(edges);
         Platform.runLater(() -> {
             graphUi.init();
         });
     }
 
     private void enableButtons() {
-        addEdgeButton.setDisable(false);
-        addVertexButton.setDisable(false);
-        deleteEdgeButton.setDisable(false);
-        exportGraphButton.setDisable(false);
+        addRailButton.setDisable(false);
+        addRailSwitchButton.setDisable(false);
+        deleteRailButton.setDisable(false);
+        exportRailwayInfrastructureButton.setDisable(false);
         shortestPathButton.setDisable(false);
     }
 

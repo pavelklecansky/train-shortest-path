@@ -23,8 +23,8 @@ public class RailwayInfrastructure {
         graph.addEdge(switchKey, secondSwitchKey, rail);
     }
 
-    public Set<String> getSwitchNames() {
-        return graph.getVerticesKey();
+    public List<RailSwitch> getSwitches() {
+        return graph.getVerticesValue();
     }
 
     public List<String> getRailsInfo() {

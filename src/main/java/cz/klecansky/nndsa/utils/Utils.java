@@ -12,12 +12,12 @@ import java.util.List;
 
 public final class Utils {
 
-    public static final String VERTICES_EDGES_DIVIDER = "#edges#";
+    public static final String VERTICES_EDGES_DIVIDER = "#rails#";
 
-    public static Dialog<Triplet<String, String, Double>> edgeDialog(List<String> vertices) {
+    public static Dialog<Triplet<String, String, Double>> railDialog(List<String> vertices) {
         Dialog<Triplet<String, String, Double>> dialog = new Dialog<>();
-        dialog.setTitle("Add edge");
-        dialog.setHeaderText("Add new edge to graph");
+        dialog.setTitle("Add rail");
+        dialog.setHeaderText("Add new rail to graph");
 
         ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
@@ -28,7 +28,7 @@ public final class Utils {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         List<String> verticesKey = new ArrayList<>(vertices);
-        Utils.SortForVerticesAndEdges(verticesKey);
+        Utils.SortForRailsAndRailsSwitches(verticesKey);
 
         ChoiceBox<String> firstVertex = new ChoiceBox<>();
         firstVertex.getItems().addAll(verticesKey);
@@ -39,9 +39,9 @@ public final class Utils {
         TextField numberField = new TextField();
         numberField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
-        grid.add(new Label("First Vertex:"), 0, 0);
+        grid.add(new Label("First rail switch:"), 0, 0);
         grid.add(firstVertex, 1, 0);
-        grid.add(new Label("Second Vertex:"), 0, 1);
+        grid.add(new Label("Second rail switch:"), 0, 1);
         grid.add(secondVertex, 1, 1);
         grid.add(new Label("Weight: "), 0, 2);
         grid.add(numberField, 1, 2);
@@ -59,15 +59,15 @@ public final class Utils {
     }
 
     public static Dialog<Pair<String, String>> removeEdgeDialog(List<String> vertices) {
-        return getTwoEdgesDialog(vertices, "Remove edge", "Remove");
+        return getTwoRailDialog(vertices, "Remove Rail", "Remove");
     }
 
     public static Dialog<Pair<String, String>> shortestPathDialog(List<String> vertices) {
-        return getTwoEdgesDialog(vertices, "Shortest Path", "Calculate");
+        return getTwoRailDialog(vertices, "Shortest Path", "Calculate");
     }
 
 
-    private static Dialog<Pair<String, String>> getTwoEdgesDialog(List<String> vertices, String title, String buttonText) {
+    private static Dialog<Pair<String, String>> getTwoRailDialog(List<String> vertices, String title, String buttonText) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle(title);
         dialog.setHeaderText(title);
@@ -81,7 +81,7 @@ public final class Utils {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         List<String> verticesKey = new ArrayList<>(vertices);
-        Utils.SortForVerticesAndEdges(verticesKey);
+        Utils.SortForRailsAndRailsSwitches(verticesKey);
 
         ChoiceBox<String> firstVertex = new ChoiceBox<>();
         firstVertex.getItems().addAll(verticesKey);
@@ -89,9 +89,9 @@ public final class Utils {
         ChoiceBox<String> secondVertex = new ChoiceBox<>();
         secondVertex.getItems().addAll(verticesKey);
 
-        grid.add(new Label("First Vertex:"), 0, 0);
+        grid.add(new Label("First rail switch:"), 0, 0);
         grid.add(firstVertex, 1, 0);
-        grid.add(new Label("Second Vertex:"), 0, 1);
+        grid.add(new Label("Second rail switch:"), 0, 1);
         grid.add(secondVertex, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
@@ -106,7 +106,7 @@ public final class Utils {
         return dialog;
     }
 
-    public static void SortForVerticesAndEdges(List<String> strings) {
+    public static void SortForRailsAndRailsSwitches(List<String> strings) {
         strings.sort(new Comparator<String>() {
             public int compare(String o1, String o2) {
                 return extractInt(o1) - extractInt(o2);

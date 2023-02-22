@@ -3,6 +3,7 @@ package cz.klecansky.nndsa.rail;
 import java.util.Objects;
 
 public class Rail {
+    private String name;
     private double length;
     private Train train;
 

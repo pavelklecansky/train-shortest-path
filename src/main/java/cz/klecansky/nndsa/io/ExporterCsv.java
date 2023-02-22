@@ -1,8 +1,6 @@
 package cz.klecansky.nndsa.io;
 
-import cz.klecansky.nndsa.graph.Edge;
-import cz.klecansky.nndsa.graph.Graph;
-import cz.klecansky.nndsa.rail.Rail;
+import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
 import cz.klecansky.nndsa.utils.Utils;
 
@@ -19,8 +17,8 @@ public class ExporterCsv {
             throw new IllegalArgumentException("Graph is null.");
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for (String switchName : railwayInfrastructure.getSwitchNames()) {
-            stringBuilder.append(switchName).append("\n");
+        for (RailSwitch railSwitch : railwayInfrastructure.getSwitches()) {
+            stringBuilder.append(railSwitch.getName()).append("\n");
         }
         stringBuilder.append(Utils.VERTICES_EDGES_DIVIDER).append("\n");
         for (String railInfo : railwayInfrastructure.getRailsInfo()) {

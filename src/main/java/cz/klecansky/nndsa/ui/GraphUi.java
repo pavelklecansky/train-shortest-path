@@ -6,6 +6,7 @@ import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrateg
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
 import cz.klecansky.nndsa.rail.Rail;
+import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
 import cz.klecansky.nndsa.utils.Triplet;
 
@@ -13,8 +14,8 @@ public class GraphUi {
     public static SmartGraphPanel<String, Weight> getGraphUi(RailwayInfrastructure railwayInfrastructure) {
         Graph<String, Weight> distances = new GraphEdgeList<>();
 
-        for (String vertex : railwayInfrastructure.getSwitchNames()) {
-            distances.insertVertex(vertex);
+        for (RailSwitch railSwitch : railwayInfrastructure.getSwitches()) {
+            distances.insertVertex(railSwitch.getName());
         }
 
         for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getRailsDetailInfo()) {

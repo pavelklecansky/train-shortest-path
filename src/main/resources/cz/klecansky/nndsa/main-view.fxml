@@ -11,34 +11,34 @@
 
 <HBox fx:id="hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="754.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.klecansky.nndsa.MainController">
    <children>
-      <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: #A0A0A0;">
+      <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="400.0" prefWidth="250.0" style="-fx-background-color: #A0A0A0;">
          <children>
-            <Button fx:id="importGraphButton" mnemonicParsing="false" onAction="#importGraph" prefHeight="26.0" prefWidth="140.0" text="Import graph">
+            <Button fx:id="importRailwayInfrastructureButton" mnemonicParsing="false" onAction="#importRailwayInfrastructure" prefHeight="26.0" prefWidth="200.0" text="Import railway infrastructure">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Button>
-            <Button fx:id="exportGraphButton" disable="true" mnemonicParsing="false" onAction="#exportGraph" prefHeight="26.0" prefWidth="140.0" text="Export graph">
+            <Button fx:id="exportRailwayInfrastructureButton" disable="true" mnemonicParsing="false" onAction="#exportRailwayInfrastructure" prefHeight="26.0" prefWidth="200.0" text="Export railway infrastructure">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addVertexButton" disable="true" mnemonicParsing="false" onAction="#addVertex" prefHeight="26.0" prefWidth="140.0" text="Add vertex">
+            <Button fx:id="addRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#addRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Add rail switch">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addEdgeButton" disable="true" mnemonicParsing="false" onAction="#addEdge" prefHeight="26.0" prefWidth="140.0" text="Add edge">
+            <Button fx:id="addRailButton" disable="true" mnemonicParsing="false" onAction="#addRail" prefHeight="26.0" prefWidth="200.0" text="Add Rail">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteEdgeButton" disable="true" mnemonicParsing="false" onAction="#deleteEdge" prefHeight="26.0" prefWidth="140.0" text="Delete edge">
+            <Button fx:id="deleteRailButton" disable="true" mnemonicParsing="false" onAction="#deleteRail" prefHeight="26.0" prefWidth="200.0" text="Delete Rail">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="shortestPathButton" disable="true" mnemonicParsing="false" onAction="#shortestPath" prefHeight="25.0" prefWidth="140.0" text="Shortest path">
+            <Button fx:id="shortestPathButton" disable="true" mnemonicParsing="false" onAction="#shortestPath" prefHeight="25.0" prefWidth="200.0" text="Shortest path">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
@@ -56,26 +56,26 @@
       </VBox>
       <AnchorPane maxWidth="400.0" prefHeight="400.0" prefWidth="442.0">
          <children>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="86.0" text="Vertices list" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="13.999999999999979">
+            <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="86.0" text="Rail Switch list" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="13.999999999999979">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
             <HBox layoutX="14.0" layoutY="35.0" prefHeight="300.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="7.600000000000023" AnchorPane.topAnchor="35.0">
                <children>
-                  <ListView fx:id="verticesListView" HBox.hgrow="ALWAYS">
+                  <ListView fx:id="railSwitchListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets bottom="10.0" right="5.0" />
                      </HBox.margin>
                   </ListView>
-                  <ListView fx:id="edgeListView" HBox.hgrow="ALWAYS">
+                  <ListView fx:id="railListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets bottom="10.0" left="5.0" />
                      </HBox.margin>
                   </ListView>
                </children>
             </HBox>
-            <Label layoutX="220.0" layoutY="14.0" prefHeight="18.0" prefWidth="86.0" text="Edge list" AnchorPane.rightAnchor="133.6" AnchorPane.topAnchor="14.0">
+            <Label layoutX="211.0" layoutY="14.0" prefHeight="18.0" prefWidth="86.0" text="Rail list" AnchorPane.rightAnchor="102.60000000000002" AnchorPane.topAnchor="14.0">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

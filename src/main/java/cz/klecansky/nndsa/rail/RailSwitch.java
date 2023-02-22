@@ -24,4 +24,9 @@ public class RailSwitch {
     public void setType(RailSwitchType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return name + ": Type:" + type;
+    }
 }

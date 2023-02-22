@@ -19,4 +19,6 @@ public interface Graph<Key, VValue, EValue> {
     List<Vertex<Key, VValue, EValue>> getVertices();
 
     List<Edge<Key, VValue, EValue>> getUndirectedEdges();
+
+    List<VValue> getVerticesValue();
 }

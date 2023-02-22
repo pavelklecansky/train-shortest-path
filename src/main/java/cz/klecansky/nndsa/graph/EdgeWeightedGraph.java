@@ -76,6 +76,11 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
         return undirectedEdges;
     }
 
+    @Override
+    public List<VValue> getVerticesValue() {
+         return vertices.values().stream().map(Vertex::getValue).toList();
+    }
+
     private boolean isVertexNotInGraph(Vertex<Key, VValue, EValue> vertex) {
         return isVertexNotInGraph(vertex.getKey());
     }
