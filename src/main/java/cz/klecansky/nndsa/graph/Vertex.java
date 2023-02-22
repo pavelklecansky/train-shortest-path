@@ -3,24 +3,24 @@ package cz.klecansky.nndsa.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex<K, V> implements Comparable<Vertex>  {
+public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValue, EValue>> {
 
-    private final K key;
-    private final V value;
+    private final Key key;
+    private final VValue value;
 
-    private final List<Edge<K, V>> edges;
+    private final List<Edge<Key, VValue, EValue>> edges;
 
-    private Vertex<K, V> previosVertex;
+    private Vertex<Key, VValue, EValue> previosVertex;
     private boolean visited;
     private double minDistance = Double.MAX_VALUE;
 
-    public Vertex(K key, V value) {
+    public Vertex(Key key, VValue value) {
         this.key = key;
         this.value = value;
         edges = new ArrayList<>();
     }
 
-    public void addEdge(Edge<K, V> edge) {
+    public void addEdge(Edge<Key, VValue, EValue> edge) {
         if (edge == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
@@ -30,33 +30,33 @@ public class Vertex<K, V> implements Comparable<Vertex>  {
         edges.add(edge);
     }
 
-    public void deleteEdge(Edge<K, V> edge) {
+    public void deleteEdge(Edge<Key, VValue, EValue> edge) {
         if (edge == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
         edges.remove(edge);
     }
 
-    public void deleteEdge(K other) {
+    public void deleteEdge(Key other) {
         if (other == null) {
             throw new IllegalArgumentException("Other vertex key is null.");
         }
         edges.removeIf(edge -> edge.getTarget().getKey().equals(other));
     }
 
-    public boolean containsEdge(Edge<K, V> newEdge) {
+    public boolean containsEdge(Edge<Key, VValue, EValue> newEdge) {
         return this.edges.contains(newEdge);
     }
 
-    public List<Edge<K, V>> getEdges() {
+    public List<Edge<Key, VValue, EValue>> getEdges() {
         return edges;
     }
 
-    public K getKey() {
+    public Key getKey() {
         return key;
     }
 
-    public V getValue() {
+    public VValue getValue() {
         return value;
     }
 
@@ -76,11 +76,11 @@ public class Vertex<K, V> implements Comparable<Vertex>  {
         this.minDistance = minDistance;
     }
 
-    public Vertex<K, V> getPreviosVertex() {
+    public Vertex<Key, VValue, EValue> getPreviosVertex() {
         return previosVertex;
     }
 
-    public void setPreviosVertex(Vertex<K, V> previosVertex) {
+    public void setPreviosVertex(Vertex<Key, VValue, EValue> previosVertex) {
         this.previosVertex = previosVertex;
     }
 
@@ -94,7 +94,7 @@ public class Vertex<K, V> implements Comparable<Vertex>  {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Vertex<?, ?> vertex = (Vertex<?, ?>) o;
+        Vertex<?, ?, ?> vertex = (Vertex<?, ?, ?>) o;
 
         return key.equals(vertex.key);
     }

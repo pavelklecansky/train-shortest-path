@@ -1,23 +1,22 @@
 package cz.klecansky.nndsa.graph;
 
-import cz.klecansky.nndsa.rail.Rail;
-
 import java.util.List;
 import java.util.Set;
 
-public interface Graph<K, V> {
-    void addVertex(K key, V value);
+public interface Graph<Key, VValue, EValue> {
+    void addVertex(Key key, VValue value);
 
-    void addEdge(K firstVertex, K secondVertex, V value);
+    void addEdge(Key firstVertex, Key secondVertex, EValue value);
 
-    void deleteEdge(K first, K second);
+    void deleteEdge(Key first, Key second);
 
-    Vertex<K, V> vertexByKey(K vertexKey);
+    Vertex<Key, VValue, EValue> vertexByKey(Key vertexKey);
 
-    Set<K> getVerticesKey();
+    Set<Key> getVerticesKey();
 
-    List<Edge<K, V>> getEdges();
-    List<Vertex<K, V>> getVertices();
+    List<Edge<Key, VValue, EValue>> getEdges();
 
-    List<Edge<K, V>> getUndirectedEdges();
+    List<Vertex<Key, VValue, EValue>> getVertices();
+
+    List<Edge<Key, VValue, EValue>> getUndirectedEdges();
 }

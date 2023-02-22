@@ -1,25 +1,25 @@
 package cz.klecansky.nndsa.graph;
 
-public class Edge<K, V> {
-    private final V value;
-    private final Vertex<K, V> start;
-    private final Vertex<K, V> target;
+public class Edge<Key, VValue, EValue> {
+    private final EValue value;
+    private final Vertex<Key, VValue, EValue> start;
+    private final Vertex<Key, VValue, EValue> target;
 
-    public Edge(Vertex<K, V> start, Vertex<K, V> target, V rail) {
+    public Edge(Vertex<Key, VValue, EValue> start, Vertex<Key, VValue, EValue> target, EValue rail) {
         this.value = rail;
         this.start = start;
         this.target = target;
     }
 
-    public V getValue() {
+    public EValue getValue() {
         return value;
     }
 
-    public Vertex<K, V> getStart() {
+    public Vertex<Key, VValue, EValue> getStart() {
         return start;
     }
 
-    public Vertex<K, V> getTarget() {
+    public Vertex<Key, VValue, EValue> getTarget() {
         return target;
     }
 
@@ -33,7 +33,7 @@ public class Edge<K, V> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Edge<?, ?> edge = (Edge<?, ?>) o;
+        Edge<?, ?, ?> edge = (Edge<?, ?, ?>) o;
 
         return (this.start.equals(edge.start) && this.target.equals(edge.target)) || (this.start.equals(edge.target) && this.target.equals(edge.start));
     }

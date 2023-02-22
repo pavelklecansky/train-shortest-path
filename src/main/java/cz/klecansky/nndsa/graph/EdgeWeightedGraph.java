@@ -2,10 +2,10 @@ package cz.klecansky.nndsa.graph;
 
 import java.util.*;
 
-public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
+public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue, EValue> {
 
-    private final Map<K, Vertex<K, V>> vertices;
-    private final List<Edge<K, V>> undirectedEdges;
+    private final Map<Key, Vertex<Key, VValue, EValue>> vertices;
+    private final List<Edge<Key, VValue, EValue>> undirectedEdges;
 
     public EdgeWeightedGraph() {
         vertices = new HashMap<>();
@@ -13,7 +13,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void addVertex(K key, V value) {
+    public void addVertex(Key key, VValue value) {
         if (key == null || value == null) {
             throw new IllegalArgumentException("Vertex is null.");
         }
@@ -24,18 +24,18 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void addEdge(K firstVertexKey, K secondVertexKey, V value) {
+    public void addEdge(Key firstVertexKey, Key secondVertexKey, EValue value) {
         if (firstVertexKey == null && secondVertexKey == null) {
             throw new IllegalArgumentException("Vertex keys are null.");
         }
         if (!vertices.containsKey(firstVertexKey) && !vertices.containsKey(secondVertexKey)) {
             throw new IllegalArgumentException("Edge vertices are not in graph.");
         }
-        Vertex<K, V> firstVertex = vertices.get(firstVertexKey);
-        Vertex<K, V> secondVertex = vertices.get(secondVertexKey);
+        Vertex<Key, VValue, EValue> firstVertex = vertices.get(firstVertexKey);
+        Vertex<Key, VValue, EValue> secondVertex = vertices.get(secondVertexKey);
 
-        Edge<K, V> firstEdge = new Edge<>(firstVertex, secondVertex, value);
-        Edge<K, V> secondEdge = new Edge<>(secondVertex, firstVertex, value);
+        Edge<Key, VValue, EValue> firstEdge = new Edge<>(firstVertex, secondVertex, value);
+        Edge<Key, VValue, EValue> secondEdge = new Edge<>(secondVertex, firstVertex, value);
 
         undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
@@ -43,7 +43,7 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public void deleteEdge(K first, K second) {
+    public void deleteEdge(Key first, Key second) {
         if (first == null || second == null) {
             throw new IllegalArgumentException("Edge is null.");
         }
@@ -52,39 +52,39 @@ public class EdgeWeightedGraph<K, V> implements Graph<K, V> {
     }
 
     @Override
-    public Vertex<K, V> vertexByKey(K vertexKey) {
+    public Vertex<Key, VValue, EValue> vertexByKey(Key vertexKey) {
         return vertices.get(vertexKey);
     }
 
     @Override
-    public Set<K> getVerticesKey() {
+    public Set<Key> getVerticesKey() {
         return vertices.keySet();
     }
 
     @Override
-    public List<Edge<K, V>> getEdges() {
+    public List<Edge<Key, VValue, EValue>> getEdges() {
         return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
     }
 
     @Override
-    public List<Vertex<K, V>> getVertices() {
+    public List<Vertex<Key, VValue, EValue>> getVertices() {
         return vertices.values().stream().toList();
     }
 
     @Override
-    public List<Edge<K, V>> getUndirectedEdges() {
+    public List<Edge<Key, VValue, EValue>> getUndirectedEdges() {
         return undirectedEdges;
     }
 
-    private boolean isVertexNotInGraph(Vertex<K, V> vertex) {
+    private boolean isVertexNotInGraph(Vertex<Key, VValue, EValue> vertex) {
         return isVertexNotInGraph(vertex.getKey());
     }
 
-    private boolean isVertexNotInGraph(K vertexKey) {
+    private boolean isVertexNotInGraph(Key vertexKey) {
         return !vertices.containsKey(vertexKey);
     }
 
-    private void deleteEdgeFromSingleVertex(K one, K other) {
+    private void deleteEdgeFromSingleVertex(Key one, Key other) {
         if (isVertexNotInGraph(one) || isVertexNotInGraph(other)) {
             throw new IllegalArgumentException("Edge vertices are not in graph.");
         }

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 public class RailwayInfrastructure {
-    private final Graph<String, Rail> graph;
+    private final Graph<String, RailSwitch, Rail> graph;
 
     public RailwayInfrastructure() {
         this.graph = new EdgeWeightedGraph<>();
     }
 
     public void addSwitch(RailSwitch railSwitch) {
-        graph.addVertex(railSwitch.getName(), new Rail(100.0));
+        graph.addVertex(railSwitch.getName(), railSwitch);
     }
 
     public void addRail(String switchKey, String secondSwitchKey, Rail rail) {
@@ -33,7 +33,7 @@ public class RailwayInfrastructure {
 
     // TODO find better way to get data about edges.
     public List<Triplet<String, String, Rail>> getRailsDetailInfo() {
-        return graph.getUndirectedEdges().stream().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(),stringRailEdge.getTarget().getKey(),stringRailEdge.getValue())).toList();
+        return graph.getUndirectedEdges().stream().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(), stringRailEdge.getTarget().getKey(), stringRailEdge.getValue())).toList();
     }
 
     public void deleteRail(String first, String second) {
