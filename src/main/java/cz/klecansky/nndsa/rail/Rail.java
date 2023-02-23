@@ -7,8 +7,10 @@ public class Rail {
     private double length;
     private Train train;
 
-    public Rail(double length) {
+    public Rail(String name, double length, Train train) {
+        this.name = name;
         this.length = length;
+        this.train = train;
     }
 
     public boolean hasTrain() {

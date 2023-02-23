@@ -82,14 +82,24 @@
             </Label>
             <HBox layoutX="14.0" layoutY="346.0" prefHeight="300.0">
                <children>
+                  <ListView fx:id="trainListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="5.0" />
+                     </HBox.margin>
+                  </ListView>
                   <ListView fx:id="shortestPathListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets right="5.0" />
+                        <Insets bottom="10.0" left="5.0" />
                      </HBox.margin>
                   </ListView>
                </children>
             </HBox>
-            <Label layoutX="14.0" layoutY="326.0" prefHeight="18.0" prefWidth="86.0" text="Shortest path">
+            <Label layoutX="240.0" layoutY="326.0" prefHeight="18.0" prefWidth="86.0" text="Shortest path">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="326.0" prefHeight="18.0" prefWidth="86.0" text="Train list">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

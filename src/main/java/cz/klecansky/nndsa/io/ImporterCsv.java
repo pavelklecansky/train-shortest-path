@@ -3,10 +3,7 @@ package cz.klecansky.nndsa.io;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
-import cz.klecansky.nndsa.rail.Rail;
-import cz.klecansky.nndsa.rail.RailSwitch;
-import cz.klecansky.nndsa.rail.RailSwitchType;
-import cz.klecansky.nndsa.rail.RailwayInfrastructure;
+import cz.klecansky.nndsa.rail.*;
 import cz.klecansky.nndsa.utils.Utils;
 
 import java.io.*;
@@ -27,8 +24,20 @@ public class ImporterCsv {
             railwayInfrastructure.addSwitch(new RailSwitch(line.trim(), RailSwitchType.NONE));
         }
         while ((line = bufferedReader.readLine()) != null) {
-            String[] split = line.split(",");
-            railwayInfrastructure.addRail(split[0], split[1], new Rail(Double.parseDouble(split[2])));
+            String[] split = line.split("\\|");
+            String[] rail = split[0].split(",");
+            String railName = rail[0];
+            String startRailSwitchKey = rail[1];
+            String endRailSwitchKey = rail[2];
+            double railLength = Double.parseDouble(rail[3]);
+            Train newTrain = null;
+            if (split.length > 1) {
+                String[] trainSplit = split[1].split(",");
+                String trainName = trainSplit[0];
+                double trainLength = Double.parseDouble(trainSplit[1]);
+                newTrain = new Train(trainName, trainLength);
+            }
+            railwayInfrastructure.addRail(startRailSwitchKey, endRailSwitchKey, new Rail(railName, railLength, newTrain));
         }
 
         return railwayInfrastructure;

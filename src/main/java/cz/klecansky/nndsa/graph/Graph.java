@@ -21,4 +21,5 @@ public interface Graph<Key, VValue, EValue> {
     List<Edge<Key, VValue, EValue>> getUndirectedEdges();
 
     List<VValue> getVerticesValue();
+    List<EValue> getEdgeValue();
 }

@@ -6,8 +6,10 @@ import cz.klecansky.nndsa.io.ImporterCsv;
 import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
+import cz.klecansky.nndsa.rail.Train;
 import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
+import cz.klecansky.nndsa.utils.RailDialogReturn;
 import cz.klecansky.nndsa.utils.Triplet;
 import cz.klecansky.nndsa.utils.Utils;
 import javafx.application.Platform;
@@ -49,6 +51,8 @@ public class MainController implements Initializable {
     @FXML
     public ListView<String> shortestPathListView;
     @FXML
+    public ListView<String> trainListView;
+    @FXML
     private Button importRailwayInfrastructureButton;
 
     private final ImporterCsv importerCsv;
@@ -72,7 +76,6 @@ public class MainController implements Initializable {
     void importRailwayInfrastructure(ActionEvent event) throws IOException {
         File fileFromFileChooser = getFileFromFileChooser();
         railwayInfrastructure = importerCsv.importRailwayInfrastructure(fileFromFileChooser);
-        ChangeEmptyGraphUi(railwayInfrastructure);
         reloadUi();
         enableButtons();
     }
@@ -92,15 +95,20 @@ public class MainController implements Initializable {
 
     @FXML
     public void addRailSwitch(ActionEvent actionEvent) {
-        System.out.println("addVertex");
+        Dialog<RailSwitch> dialog = Utils.railSwitchDialog();
+        Optional<RailSwitch> result = dialog.showAndWait();
+        result.ifPresent(railSwitch -> {
+            railwayInfrastructure.addSwitch(railSwitch);
+            reloadUi();
+        });
     }
 
     @FXML
     public void addRail(ActionEvent actionEvent) {
-        Dialog<Triplet<String, String, Double>> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
-        Optional<Triplet<String, String, Double>> result = dialog.showAndWait();
-        result.ifPresent(vertex -> {
-            railwayInfrastructure.addRail(vertex.getFirst(), vertex.getSecond(), new Rail(vertex.getThird()));
+        Dialog<RailDialogReturn> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
+        Optional<RailDialogReturn> result = dialog.showAndWait();
+        result.ifPresent(rail -> {
+            railwayInfrastructure.addRail(rail.startRailSwitchKey(), rail.endRailSwitchKey(), new Rail(rail.railName(), rail.railLength(), rail.train()));
             reloadUi();
         });
     }
@@ -137,14 +145,18 @@ public class MainController implements Initializable {
     }
 
     private void reloadUi() {
+        ChangeEmptyGraphUi(railwayInfrastructure);
         railSwitchListView.getItems().clear();
         railListView.getItems().clear();
+        trainListView.getItems().clear();
         List<String> verticesKey = new ArrayList<>(railwayInfrastructure.getSwitches().stream().map(RailSwitch::toString).toList());
         Utils.SortForRailsAndRailsSwitches(verticesKey);
         railSwitchListView.getItems().addAll(verticesKey);
         List<String> edges = new ArrayList<>(railwayInfrastructure.getRailsInfo().stream().toList());
         Utils.SortForRailsAndRailsSwitches(edges);
         railListView.getItems().addAll(edges);
+        List<String> trains = new ArrayList<>(railwayInfrastructure.getTrains().stream().map(Train::toString).toList());
+        trainListView.getItems().addAll(trains);
         Platform.runLater(() -> {
             graphUi.init();
         });

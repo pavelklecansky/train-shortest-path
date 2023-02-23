@@ -6,7 +6,6 @@ import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.utils.Triplet;
 
 import java.util.List;
-import java.util.Set;
 
 public class RailwayInfrastructure {
     private final Graph<String, RailSwitch, Rail> graph;
@@ -25,6 +24,14 @@ public class RailwayInfrastructure {
 
     public List<RailSwitch> getSwitches() {
         return graph.getVerticesValue();
+    }
+
+    public List<Rail> getRails() {
+        return graph.getEdgeValue();
+    }
+
+    public List<Train> getTrains() {
+        return getRails().stream().filter(Rail::hasTrain).map(Rail::getTrain).toList();
     }
 
     public List<String> getRailsInfo() {
