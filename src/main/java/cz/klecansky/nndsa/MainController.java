@@ -1,6 +1,7 @@
 package cz.klecansky.nndsa;
 
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
+import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
 import cz.klecansky.nndsa.rail.Rail;
@@ -10,7 +11,6 @@ import cz.klecansky.nndsa.rail.Train;
 import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
 import cz.klecansky.nndsa.utils.RailDialogReturn;
-import cz.klecansky.nndsa.utils.Triplet;
 import cz.klecansky.nndsa.utils.Utils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -52,6 +53,8 @@ public class MainController implements Initializable {
     public ListView<String> shortestPathListView;
     @FXML
     public ListView<String> trainListView;
+    @FXML
+    public Label shortestPathLabel;
     @FXML
     private Button importRailwayInfrastructureButton;
 
@@ -127,20 +130,13 @@ public class MainController implements Initializable {
     public void shortestPath(ActionEvent actionEvent) {
         Dialog<Pair<String, String>> dialog = Utils.shortestPathDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<Pair<String, String>> result = dialog.showAndWait();
-        result.ifPresent(vertex -> {
-//            Dijsktra dijsktra = new Dijsktra();
-//            Vertex<String, Integer> sourceVertex = graph.vertexByKey(vertex.getKey());
-//            dijsktra.computePath(sourceVertex);
-//            Vertex<String, Integer> targetVertex = graph.vertexByKey(vertex.getValue());
-//            List<Vertex<String, Integer>> shortestPathTo = dijsktra.getShortestPathTo(targetVertex);
-//            System.out.println(shortestPathTo);
-//            DijkstraAlgorithm dijkstraAlgorithm = new DijkstraAlgorithm(railwayInfrastructure);
-//            Vertex<String, Rail> sourceVertex = railwayInfrastructure.vertexByKey(vertex.getKey());
-//            dijkstraAlgorithm.execute(sourceVertex);
-//            Vertex<String, Rail> targetVertex = railwayInfrastructure.vertexByKey(vertex.getValue());
-//            LinkedList<Vertex<String, Rail>> path = dijkstraAlgorithm.getPath(targetVertex);
-//            shortestPathListView.getItems().clear();
-//            shortestPathListView.getItems().addAll(path.stream().map(Vertex::getKey).toList());
+        result.ifPresent(keyPair -> {
+            System.out.println(keyPair);
+            List<Vertex<String, RailSwitch, Rail>> shortestPath = railwayInfrastructure.shortestPath(keyPair.getKey(), keyPair.getValue());
+            double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).getMinDistance();
+            shortestPathLabel.setText(Utils.shortestPathFormat(shortestPathDistance));
+            shortestPathListView.getItems().clear();
+            shortestPathListView.getItems().addAll(shortestPath.stream().map(Vertex::getKey).toList());
         });
     }
 

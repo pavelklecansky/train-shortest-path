@@ -15,7 +15,13 @@ import java.util.*;
 
 public final class Utils {
 
+
     public static final String VERTICES_EDGES_DIVIDER = "#rails#";
+
+
+    public static String shortestPathFormat(double length) {
+        return String.format("Shortest path: %1.2f", length);
+    }
 
     public static Dialog<RailSwitch> railSwitchDialog() {
         Dialog<RailSwitch> dialog = new Dialog<>();

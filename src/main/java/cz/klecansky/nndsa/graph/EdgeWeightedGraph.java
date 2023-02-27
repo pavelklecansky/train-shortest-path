@@ -86,9 +86,24 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
         return undirectedEdges.stream().map(Edge::getValue).toList();
     }
 
-    private boolean isVertexNotInGraph(Vertex<Key, VValue, EValue> vertex) {
-        return isVertexNotInGraph(vertex.getKey());
+    @Override
+    public void clearDijkstra() {
+        vertices.forEach((key, vertex) -> {
+            vertex.clearDijkstra();
+        });
     }
+
+    @Override
+    public VValue getVertexValue(Key key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Vertex key is null.");
+        }
+        if (!vertices.containsKey(key)) {
+            throw new IllegalArgumentException("Vertex with this key is not in graph.");
+        }
+        return vertices.get(key).getValue();
+    }
+
 
     private boolean isVertexNotInGraph(Key vertexKey) {
         return !vertices.containsKey(vertexKey);

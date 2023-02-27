@@ -1,6 +1,7 @@
 package cz.klecansky.nndsa.graph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValue, EValue>> {
@@ -28,13 +29,6 @@ public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValu
             throw new IllegalArgumentException(String.format("Edge is already in vertex: %s", edge));
         }
         edges.add(edge);
-    }
-
-    public void deleteEdge(Edge<Key, VValue, EValue> edge) {
-        if (edge == null) {
-            throw new IllegalArgumentException("Edge is null.");
-        }
-        edges.remove(edge);
     }
 
     public void deleteEdge(Key other) {
@@ -84,6 +78,11 @@ public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValu
         this.previosVertex = previosVertex;
     }
 
+    public void clearDijkstra() {
+        previosVertex = null;
+        minDistance = Double.MAX_VALUE;
+    }
+
     @Override
     public String toString() {
         return key.toString();
@@ -108,4 +107,6 @@ public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValu
     public int compareTo(Vertex otherVertex) {
         return Double.compare(this.minDistance, otherVertex.minDistance);
     }
+
+
 }

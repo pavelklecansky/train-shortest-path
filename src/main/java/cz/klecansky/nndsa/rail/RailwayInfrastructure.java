@@ -1,8 +1,10 @@
 package cz.klecansky.nndsa.rail;
 
+import cz.klecansky.nndsa.algorithms.Dijkstra;
 import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
+import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.utils.Triplet;
 
 import java.util.List;
@@ -45,5 +47,19 @@ public class RailwayInfrastructure {
 
     public void deleteRail(String first, String second) {
         graph.deleteEdge(first, second);
+    }
+
+    public List<Vertex<String, RailSwitch, Rail>> shortestPath(String from, String to) {
+        graph.clearDijkstra();
+        Dijkstra dijkstra = new Dijkstra();
+        Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(from);
+        dijkstra.computePath(sourceVertex);
+        Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(to);
+        return dijkstra.getShortestPathTo(targetVertex);
+    }
+
+    public void setTrainNearFor(String railNear) {
+        RailSwitch railSwitch = graph.getVertexValue(railNear);
+        railSwitch.setTrainNear(true);
     }
 }

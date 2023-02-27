@@ -22,4 +22,8 @@ public interface Graph<Key, VValue, EValue> {
 
     List<VValue> getVerticesValue();
     List<EValue> getEdgeValue();
+
+    void clearDijkstra();
+
+    VValue getVertexValue(Key railNear);
 }
