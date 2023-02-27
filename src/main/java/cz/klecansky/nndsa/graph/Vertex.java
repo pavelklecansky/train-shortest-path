@@ -1,10 +1,9 @@
 package cz.klecansky.nndsa.graph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class Vertex<Key, VValue, EValue> implements Comparable<Vertex<Key, VValue, EValue>> {
+public class Vertex<Key extends Comparable<Key>, VValue, EValue> implements Comparable<Vertex<Key, VValue, EValue>> {
 
     private final Key key;
     private final VValue value;

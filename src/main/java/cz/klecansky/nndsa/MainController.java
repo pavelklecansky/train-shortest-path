@@ -12,6 +12,7 @@ import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
 import cz.klecansky.nndsa.utils.RailDialogReturn;
 import cz.klecansky.nndsa.utils.ShortestPathDialogReturn;
+import cz.klecansky.nndsa.utils.Triplet;
 import cz.klecansky.nndsa.utils.Utils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -154,14 +155,16 @@ public class MainController implements Initializable {
         List<String> verticesKey = new ArrayList<>(railwayInfrastructure.getSwitches().stream().map(RailSwitch::toString).toList());
         Utils.SortForRailsAndRailsSwitches(verticesKey);
         railSwitchListView.getItems().addAll(verticesKey);
-        List<String> edges = new ArrayList<>(railwayInfrastructure.getRailsInfo().stream().toList());
-        Utils.SortForRailsAndRailsSwitches(edges);
-        railListView.getItems().addAll(edges);
+        List<String> rails = new ArrayList<>(railwayInfrastructure.getRailsDetailInfo().stream().map(this::railsDetailInfoToFormatedString).toList());
+        Utils.SortForRailsAndRailsSwitches(rails);
+        railListView.getItems().addAll(rails);
         List<String> trains = new ArrayList<>(railwayInfrastructure.getTrains().stream().map(Train::toString).toList());
         trainListView.getItems().addAll(trains);
-        Platform.runLater(() -> {
-            graphUi.init();
-        });
+        Platform.runLater(() -> graphUi.init());
+    }
+
+    private String railsDetailInfoToFormatedString(Triplet<String, String, Rail> detailedInfo) {
+        return String.format("%s: %s-%s %s", detailedInfo.getThird().getName(), detailedInfo.getFirst(), detailedInfo.getSecond(), detailedInfo.getThird().getLength());
     }
 
     private void enableButtons() {

@@ -1,8 +1,5 @@
 package cz.klecansky.nndsa.io;
 
-import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
-import cz.klecansky.nndsa.graph.Graph;
-import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.rail.*;
 import cz.klecansky.nndsa.utils.Utils;
 

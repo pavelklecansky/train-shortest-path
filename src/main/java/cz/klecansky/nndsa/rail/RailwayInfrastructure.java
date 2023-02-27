@@ -1,7 +1,6 @@
 package cz.klecansky.nndsa.rail;
 
 import cz.klecansky.nndsa.algorithms.Dijkstra;
-import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
@@ -33,22 +32,18 @@ public class RailwayInfrastructure {
     }
 
     public List<Train> getTrains() {
-        return getRails().stream().filter(Rail::hasTrain).map(Rail::getTrain).toList();
-    }
-
-    public List<String> getRailsInfo() {
-        return graph.getEdges().stream().map(Edge::toString).toList();
-    }
-
-    public List<String> getRailKeys() {
-        return graph.getEdgeValue().stream().map(Rail::getName).sorted().distinct().toList();
+        return getRails().stream().filter(Rail::hasTrain).map(Rail::getTrain).sorted().distinct().toList();
     }
 
 
-    // TODO find better way to get data about edges.
+    public List<Triplet<String, String, Rail>> getDistinctRailsDetailInfo() {
+        return graph.getDistinctDetailEdgeValues();
+    }
+
     public List<Triplet<String, String, Rail>> getRailsDetailInfo() {
-        return graph.getUndirectedEdges().stream().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(), stringRailEdge.getTarget().getKey(), stringRailEdge.getValue())).toList();
+        return graph.getDetailEdgeValues();
     }
+
 
     public void deleteRail(String first, String second) {
         graph.deleteEdge(first, second);

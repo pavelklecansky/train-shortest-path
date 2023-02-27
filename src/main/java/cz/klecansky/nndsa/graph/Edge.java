@@ -2,7 +2,7 @@ package cz.klecansky.nndsa.graph;
 
 import java.util.Objects;
 
-public class Edge<Key, VValue, EValue> {
+public class Edge<Key extends Comparable<Key>, VValue, EValue> implements Comparable<Edge<Key, VValue, EValue>> {
     private final Key key;
     private final EValue value;
     private final Vertex<Key, VValue, EValue> start;
@@ -53,5 +53,10 @@ public class Edge<Key, VValue, EValue> {
         result = 31 * result + start.hashCode();
         result = 31 * result + target.hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(Edge<Key, VValue, EValue> o) {
+        return this.key.compareTo(o.key);
     }
 }

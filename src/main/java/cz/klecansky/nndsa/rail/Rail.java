@@ -2,7 +2,7 @@ package cz.klecansky.nndsa.rail;
 
 import java.util.Objects;
 
-public class Rail {
+public class Rail implements Comparable<Rail> {
     private final String name;
     private double length;
     private Train train;
@@ -37,9 +37,10 @@ public class Rail {
         return name;
     }
 
+
     @Override
     public String toString() {
-        return String.valueOf(length);
+        return name + ": " + length;
     }
 
     @Override
@@ -55,5 +56,10 @@ public class Rail {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public int compareTo(Rail o) {
+        return this.name.compareTo(o.name);
     }
 }

@@ -2,7 +2,7 @@ package cz.klecansky.nndsa.rail;
 
 import java.util.Objects;
 
-public final class Train {
+public final class Train implements Comparable<Train> {
     private final String name;
     private final double length;
     private final String nearRail;
@@ -29,13 +29,15 @@ public final class Train {
         return nearRail;
     }
 
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Train) obj;
-        return Objects.equals(this.name, that.name) &&
-                Double.doubleToLongBits(this.length) == Double.doubleToLongBits(that.length);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Train train = (Train) o;
+
+        return Objects.equals(name, train.name);
     }
 
     @Override
@@ -50,5 +52,10 @@ public final class Train {
                 ", length=" + length +
                 ", nearRail='" + nearRail + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Train o) {
+        return this.name.compareTo(o.name);
     }
 }

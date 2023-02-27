@@ -18,7 +18,7 @@ public class GraphUi {
             distances.insertVertex(railSwitch.getName());
         }
 
-        for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getRailsDetailInfo()) {
+        for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getDistinctRailsDetailInfo()) {
             System.out.println(triplet);
             distances.insertEdge(triplet.getFirst(), triplet.getSecond(), new Weight(triplet.getThird().getLength()));
         }

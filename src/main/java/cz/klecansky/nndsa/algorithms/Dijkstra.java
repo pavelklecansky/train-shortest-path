@@ -34,10 +34,10 @@ public class Dijkstra {
         }
     }
 
-    public List<Vertex<String, RailSwitch, Rail>> getShortestPathTo(Vertex<String, RailSwitch, Rail> targetVerte) {
+    public List<Vertex<String, RailSwitch, Rail>> getShortestPathTo(Vertex<String, RailSwitch, Rail> targetVertex) {
         List<Vertex<String, RailSwitch, Rail>> path = new ArrayList<>();
 
-        for (Vertex<String, RailSwitch, Rail> vertex = targetVerte; vertex != null; vertex = vertex.getPreviosVertex()) {
+        for (Vertex<String, RailSwitch, Rail> vertex = targetVertex; vertex != null; vertex = vertex.getPreviosVertex()) {
             path.add(vertex);
         }
 

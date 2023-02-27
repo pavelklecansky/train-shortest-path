@@ -1,8 +1,10 @@
 package cz.klecansky.nndsa.graph;
 
+import cz.klecansky.nndsa.utils.Triplet;
+
 import java.util.*;
 
-public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue, EValue> {
+public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> implements Graph<Key, VValue, EValue> {
 
     private final Map<Key, Vertex<Key, VValue, EValue>> vertices;
     private final List<Edge<Key, VValue, EValue>> undirectedEdges;
@@ -83,14 +85,12 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
 
     @Override
     public List<EValue> getEdgeValue() {
-        return undirectedEdges.stream().map(Edge::getValue).toList();
+        return getEdges().stream().map(Edge::getValue).toList();
     }
 
     @Override
     public void clearDijkstra() {
-        vertices.forEach((key, vertex) -> {
-            vertex.clearDijkstra();
-        });
+        vertices.forEach((key, vertex) -> vertex.clearDijkstra());
     }
 
     @Override
@@ -115,8 +115,18 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
     }
 
     @Override
+    public List<Triplet<Key, Key, EValue>> getDistinctDetailEdgeValues() {
+        return getEdges().stream().sorted().distinct().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(), stringRailEdge.getTarget().getKey(), stringRailEdge.getValue())).toList();
+    }
+
+    @Override
     public EValue getEdgeValue(Key railSwitchStart) {
         return edgeByKey(railSwitchStart).getValue();
+    }
+
+    @Override
+    public List<Triplet<Key, Key, EValue>> getDetailEdgeValues() {
+        return getEdges().stream().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(), stringRailEdge.getTarget().getKey(), stringRailEdge.getValue())).toList();
     }
 
 

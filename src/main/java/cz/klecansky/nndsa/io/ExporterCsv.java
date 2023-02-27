@@ -1,5 +1,6 @@
 package cz.klecansky.nndsa.io;
 
+import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
 import cz.klecansky.nndsa.utils.Utils;
@@ -21,7 +22,7 @@ public class ExporterCsv {
             stringBuilder.append(railSwitch.getName()).append("\n");
         }
         stringBuilder.append(Utils.VERTICES_EDGES_DIVIDER).append("\n");
-        for (String railInfo : railwayInfrastructure.getRailsInfo()) {
+        for (String railInfo : railwayInfrastructure.getRails().stream().map(Rail::toString).toList()) {
             stringBuilder.append(railInfo).append("\n");
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {

@@ -1,9 +1,11 @@
 package cz.klecansky.nndsa.graph;
 
+import cz.klecansky.nndsa.utils.Triplet;
+
 import java.util.List;
 import java.util.Set;
 
-public interface Graph<Key, VValue, EValue> {
+public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
     void addVertex(Key key, VValue value);
 
     void addEdge(Key key, Key firstVertexKey, Key secondVertexKey, EValue value);
@@ -21,15 +23,20 @@ public interface Graph<Key, VValue, EValue> {
     List<Edge<Key, VValue, EValue>> getUndirectedEdges();
 
     List<VValue> getVerticesValue();
+
     List<EValue> getEdgeValue();
 
     void clearDijkstra();
 
     VValue getVertexValue(Key railNear);
 
-    Edge<Key,VValue,EValue> edgeByKey(Key from);
+    Edge<Key, VValue, EValue> edgeByKey(Key from);
 
     List<Key> getVertexEdgeKeys(Key newValue);
 
+    List<Triplet<Key, Key, EValue>> getDistinctDetailEdgeValues();
+
     EValue getEdgeValue(Key railSwitchStart);
+
+    List<Triplet<Key, Key,EValue>> getDetailEdgeValues();
 }

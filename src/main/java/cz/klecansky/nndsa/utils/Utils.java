@@ -1,15 +1,12 @@
 package cz.klecansky.nndsa.utils;
 
 import cz.klecansky.nndsa.rail.*;
-import javafx.collections.ListChangeListener;
-import javafx.event.EventType;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Pair;
-import javafx.util.converter.NumberStringConverter;
 
 import java.util.*;
 
