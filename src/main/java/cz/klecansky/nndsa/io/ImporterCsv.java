@@ -39,7 +39,7 @@ public class ImporterCsv {
                 newTrain = new Train(trainName, trainLength, railNear);
                 railwayInfrastructure.setTrainNearFor(railNear);
             }
-            railwayInfrastructure.addRail(startRailSwitchKey, endRailSwitchKey, new Rail(railName, railLength, newTrain));
+            railwayInfrastructure.addRail(railName, startRailSwitchKey, endRailSwitchKey, new Rail(railName, railLength, newTrain));
         }
 
         return railwayInfrastructure;

@@ -24,7 +24,7 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
     }
 
     @Override
-    public void addEdge(Key firstVertexKey, Key secondVertexKey, EValue value) {
+    public void addEdge(Key key, Key firstVertexKey, Key secondVertexKey, EValue value) {
         if (firstVertexKey == null && secondVertexKey == null) {
             throw new IllegalArgumentException("Vertex keys are null.");
         }
@@ -34,8 +34,8 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
         Vertex<Key, VValue, EValue> firstVertex = vertices.get(firstVertexKey);
         Vertex<Key, VValue, EValue> secondVertex = vertices.get(secondVertexKey);
 
-        Edge<Key, VValue, EValue> firstEdge = new Edge<>(firstVertex, secondVertex, value);
-        Edge<Key, VValue, EValue> secondEdge = new Edge<>(secondVertex, firstVertex, value);
+        Edge<Key, VValue, EValue> firstEdge = new Edge<>(key, firstVertex, secondVertex, value);
+        Edge<Key, VValue, EValue> secondEdge = new Edge<>(key, secondVertex, firstVertex, value);
 
         undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
@@ -102,6 +102,21 @@ public class EdgeWeightedGraph<Key, VValue, EValue> implements Graph<Key, VValue
             throw new IllegalArgumentException("Vertex with this key is not in graph.");
         }
         return vertices.get(key).getValue();
+    }
+
+    @Override
+    public Edge<Key, VValue, EValue> edgeByKey(Key from) {
+        return getEdges().stream().filter(keyVValueEValueEdge -> keyVValueEValueEdge.getKey().equals(from)).findFirst().get();
+    }
+
+    @Override
+    public List<Key> getVertexEdgeKeys(Key newValue) {
+        return vertices.get(newValue).getEdges().stream().map(Edge::getKey).toList();
+    }
+
+    @Override
+    public EValue getEdgeValue(Key railSwitchStart) {
+        return edgeByKey(railSwitchStart).getValue();
     }
 
 

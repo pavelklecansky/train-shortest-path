@@ -6,7 +6,7 @@ import java.util.Set;
 public interface Graph<Key, VValue, EValue> {
     void addVertex(Key key, VValue value);
 
-    void addEdge(Key firstVertex, Key secondVertex, EValue value);
+    void addEdge(Key key, Key firstVertexKey, Key secondVertexKey, EValue value);
 
     void deleteEdge(Key first, Key second);
 
@@ -26,4 +26,10 @@ public interface Graph<Key, VValue, EValue> {
     void clearDijkstra();
 
     VValue getVertexValue(Key railNear);
+
+    Edge<Key,VValue,EValue> edgeByKey(Key from);
+
+    List<Key> getVertexEdgeKeys(Key newValue);
+
+    EValue getEdgeValue(Key railSwitchStart);
 }

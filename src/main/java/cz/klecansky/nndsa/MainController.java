@@ -11,6 +11,7 @@ import cz.klecansky.nndsa.rail.Train;
 import cz.klecansky.nndsa.ui.GraphUi;
 import cz.klecansky.nndsa.ui.Weight;
 import cz.klecansky.nndsa.utils.RailDialogReturn;
+import cz.klecansky.nndsa.utils.ShortestPathDialogReturn;
 import cz.klecansky.nndsa.utils.Utils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -111,7 +112,7 @@ public class MainController implements Initializable {
         Dialog<RailDialogReturn> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<RailDialogReturn> result = dialog.showAndWait();
         result.ifPresent(rail -> {
-            railwayInfrastructure.addRail(rail.startRailSwitchKey(), rail.endRailSwitchKey(), new Rail(rail.railName(), rail.railLength(), rail.train()));
+            railwayInfrastructure.addRail(rail.railName(), rail.startRailSwitchKey(), rail.endRailSwitchKey(), new Rail(rail.railName(), rail.railLength(), rail.train()));
             reloadUi();
         });
     }
@@ -128,15 +129,20 @@ public class MainController implements Initializable {
 
     @FXML
     public void shortestPath(ActionEvent actionEvent) {
-        Dialog<Pair<String, String>> dialog = Utils.shortestPathDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-        result.ifPresent(keyPair -> {
-            System.out.println(keyPair);
-            List<Vertex<String, RailSwitch, Rail>> shortestPath = railwayInfrastructure.shortestPath(keyPair.getKey(), keyPair.getValue());
-            double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).getMinDistance();
-            shortestPathLabel.setText(Utils.shortestPathFormat(shortestPathDistance));
-            shortestPathListView.getItems().clear();
-            shortestPathListView.getItems().addAll(shortestPath.stream().map(Vertex::getKey).toList());
+        Dialog<ShortestPathDialogReturn> dialog = Utils.shortestPathDialog(railwayInfrastructure);
+        Optional<ShortestPathDialogReturn> result = dialog.showAndWait();
+        result.ifPresent(shortestPathReturn -> {
+            System.out.println(shortestPathReturn);
+            try {
+                List<Vertex<String, RailSwitch, Rail>> shortestPath = railwayInfrastructure.shortestPath(shortestPathReturn.firstViaRailSwitch(), shortestPathReturn.startRail(), shortestPathReturn.secondViaRailSwitch(), shortestPathReturn.endRail(), shortestPathReturn.trainLength());
+                double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).getMinDistance();
+                shortestPathLabel.setText(Utils.shortestPathFormat(shortestPathDistance));
+                shortestPathListView.getItems().clear();
+                shortestPathListView.getItems().addAll(shortestPath.stream().map(Vertex::getKey).toList());
+            } catch (Exception exception) {
+                Utils.alert(exception.getMessage());
+            }
+
         });
     }
 

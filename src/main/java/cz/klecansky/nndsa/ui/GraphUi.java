@@ -19,6 +19,7 @@ public class GraphUi {
         }
 
         for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getRailsDetailInfo()) {
+            System.out.println(triplet);
             distances.insertEdge(triplet.getFirst(), triplet.getSecond(), new Weight(triplet.getThird().getLength()));
         }
 

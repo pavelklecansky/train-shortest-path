@@ -1,8 +1,8 @@
 package cz.klecansky.nndsa.utils;
 
-import cz.klecansky.nndsa.rail.RailSwitch;
-import cz.klecansky.nndsa.rail.RailSwitchType;
-import cz.klecansky.nndsa.rail.Train;
+import cz.klecansky.nndsa.rail.*;
+import javafx.collections.ListChangeListener;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -127,20 +127,15 @@ public final class Utils {
     }
 
     public static Dialog<Pair<String, String>> removeEdgeDialog(List<String> vertices) {
-        return getTwoRailDialog(vertices, "Remove Rail", "Remove");
+        return new Dialog<>();
     }
 
-    public static Dialog<Pair<String, String>> shortestPathDialog(List<String> vertices) {
-        return getTwoRailDialog(vertices, "Shortest Path", "Calculate");
-    }
+    public static Dialog<ShortestPathDialogReturn> shortestPathDialog(RailwayInfrastructure infrastructure) {
+        Dialog<ShortestPathDialogReturn> dialog = new Dialog<>();
+        dialog.setTitle("Shortest Path");
+        dialog.setHeaderText("Shortest Path");
 
-
-    private static Dialog<Pair<String, String>> getTwoRailDialog(List<String> vertices, String title, String buttonText) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle(title);
-        dialog.setHeaderText(title);
-
-        ButtonType addButtonType = new ButtonType(buttonText, ButtonBar.ButtonData.OK_DONE);
+        ButtonType addButtonType = new ButtonType("Calculate", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
@@ -148,30 +143,70 @@ public final class Utils {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        List<String> verticesKey = new ArrayList<>(vertices);
-        Utils.SortForRailsAndRailsSwitches(verticesKey);
+        List<String> railSwitchKey = new ArrayList<>(infrastructure.getSwitchKeys());
+        Utils.SortForRailsAndRailsSwitches(railSwitchKey);
 
-        ChoiceBox<String> firstVertex = new ChoiceBox<>();
-        firstVertex.getItems().addAll(verticesKey);
+        ChoiceBox<String> firstViaRailSwitch = new ChoiceBox<>();
+        firstViaRailSwitch.getItems().addAll(railSwitchKey);
 
-        ChoiceBox<String> secondVertex = new ChoiceBox<>();
-        secondVertex.getItems().addAll(verticesKey);
+        ChoiceBox<String> startRail = new ChoiceBox<>();
+        startRail.setDisable(true);
 
-        grid.add(new Label("First rail switch:"), 0, 0);
-        grid.add(firstVertex, 1, 0);
-        grid.add(new Label("Second rail switch:"), 0, 1);
-        grid.add(secondVertex, 1, 1);
+        firstViaRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            startRail.getItems().clear();
+
+            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            startRail.getItems().addAll(neighbours);
+            startRail.setDisable(false);
+        });
+
+        ChoiceBox<String> secondViaRaiSwitch = new ChoiceBox<>();
+        secondViaRaiSwitch.getItems().addAll(railSwitchKey);
+
+        ChoiceBox<String> endRail = new ChoiceBox<>();
+        endRail.setDisable(true);
+
+        secondViaRaiSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            endRail.getItems().clear();
+
+            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            endRail.getItems().addAll(neighbours);
+            endRail.setDisable(false);
+        });
+
+        TextField trainLength = new TextField();
+
+        grid.add(new Label("Via rail switch:"), 0, 0);
+        grid.add(firstViaRailSwitch, 1, 0);
+        grid.add(new Label("Start rail:"), 0, 1);
+        grid.add(startRail, 1, 1);
+        grid.add(new Separator(), 0, 2, 2, 1);
+        grid.add(new Label("Via rail switch:"), 0, 3);
+        grid.add(secondViaRaiSwitch, 1, 3);
+        grid.add(new Label("End rail:"), 0, 4);
+        grid.add(endRail, 1, 4);
+        grid.add(new Separator(), 0, 5, 2, 1);
+        grid.add(new Label("Train length:"), 0, 6);
+        grid.add(trainLength, 1, 6);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                return new Pair<>(firstVertex.getValue(), secondVertex.getValue());
+                return new ShortestPathDialogReturn(firstViaRailSwitch.getValue(), startRail.getValue(), secondViaRaiSwitch.getValue(), endRail.getValue(), Double.parseDouble(trainLength.getText()));
             }
             return null;
         });
 
         return dialog;
+    }
+
+    public static void alert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText(message);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void SortForRailsAndRailsSwitches(List<String> strings) {

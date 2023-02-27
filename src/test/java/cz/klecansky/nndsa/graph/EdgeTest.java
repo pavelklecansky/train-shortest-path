@@ -12,8 +12,8 @@ class EdgeTest {
         Vertex<String, Double, Integer> first = new Vertex<>("first", 100.0);
         Vertex<String, Double, Integer> second = new Vertex<>("second", 100.0);
 
-        Edge<String, Double, Integer> firstEdge = new Edge<>(first, second, 100);
-        Edge<String, Double, Integer> secondEdge = new Edge<>(second, first, 100);
+        Edge<String, Double, Integer> firstEdge = new Edge<>("e1", first, second, 100);
+        Edge<String, Double, Integer> secondEdge = new Edge<>("e1", second, first, 100);
 
         assertEquals(firstEdge, secondEdge);
     }
@@ -23,8 +23,8 @@ class EdgeTest {
         Vertex<String, Double, Integer> first = new Vertex<>("v13", 40.0);
         Vertex<String, Double, Integer> second = new Vertex<>("v14", 40.0);
 
-        Edge<String, Double, Integer> firstEdge = new Edge<>(first, second, 100);
-        Edge<String, Double, Integer> secondEdge = new Edge<>(second, first, 100);
+        Edge<String, Double, Integer> firstEdge = new Edge<>("e1", first, second, 100);
+        Edge<String, Double, Integer> secondEdge = new Edge<>("e1", second, first, 100);
 
         List<Edge<String, Double, Integer>> firstEdge1 = List.of(firstEdge, secondEdge);
 

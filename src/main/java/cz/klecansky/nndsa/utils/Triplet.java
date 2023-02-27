@@ -44,4 +44,13 @@ public class Triplet<A, B, C> {
         result = 31 * result + (third != null ? third.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Triplet{" +
+                "first=" + first +
+                ", second=" + second +
+                ", third=" + third +
+                '}';
+    }
 }

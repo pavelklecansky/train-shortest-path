@@ -1,11 +1,15 @@
 package cz.klecansky.nndsa.graph;
 
+import java.util.Objects;
+
 public class Edge<Key, VValue, EValue> {
+    private final Key key;
     private final EValue value;
     private final Vertex<Key, VValue, EValue> start;
     private final Vertex<Key, VValue, EValue> target;
 
-    public Edge(Vertex<Key, VValue, EValue> start, Vertex<Key, VValue, EValue> target, EValue rail) {
+    public Edge(Key key, Vertex<Key, VValue, EValue> start, Vertex<Key, VValue, EValue> target, EValue rail) {
+        this.key = key;
         this.value = rail;
         this.start = start;
         this.target = target;
@@ -23,10 +27,15 @@ public class Edge<Key, VValue, EValue> {
         return target;
     }
 
+    public Key getKey() {
+        return key;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s-%s %s", start, target, value);
+        return String.format("%s: %s-%s %s", key, start, target, value);
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -35,7 +44,7 @@ public class Edge<Key, VValue, EValue> {
 
         Edge<?, ?, ?> edge = (Edge<?, ?, ?>) o;
 
-        return (this.start.equals(edge.start) && this.target.equals(edge.target)) || (this.start.equals(edge.target) && this.target.equals(edge.start));
+        return Objects.equals(key, edge.key);
     }
 
     @Override

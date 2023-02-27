@@ -3,7 +3,7 @@ package cz.klecansky.nndsa.rail;
 import java.util.Objects;
 
 public class Rail {
-    private String name;
+    private final String name;
     private double length;
     private Train train;
 
@@ -33,8 +33,27 @@ public class Rail {
         this.length = length;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(length);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Rail rail = (Rail) o;
+
+        return name.equals(rail.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }
