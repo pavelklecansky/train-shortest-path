@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Vertex<Key extends Comparable<Key>, VValue, EValue> implements Comparable<Vertex<Key, VValue, EValue>> {
 
-    private final Key key;
+    private Key key;
     private final VValue value;
 
     private final List<Edge<Key, VValue, EValue>> edges;
@@ -37,6 +37,10 @@ public class Vertex<Key extends Comparable<Key>, VValue, EValue> implements Comp
         edges.removeIf(edge -> edge.getTarget().getKey().equals(other));
     }
 
+    public void deleteEdgeExact(Key edgeKey) {
+        edges.removeIf(edge -> edge.getKey().equals(edgeKey));
+    }
+
     public boolean containsEdge(Edge<Key, VValue, EValue> newEdge) {
         return this.edges.contains(newEdge);
     }
@@ -51,6 +55,10 @@ public class Vertex<Key extends Comparable<Key>, VValue, EValue> implements Comp
 
     public VValue getValue() {
         return value;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
     }
 
     public boolean isVisited() {
@@ -107,5 +115,7 @@ public class Vertex<Key extends Comparable<Key>, VValue, EValue> implements Comp
         return Double.compare(this.minDistance, otherVertex.minDistance);
     }
 
-
+    public boolean hasEdge(Key edgeKey) {
+        return edges.stream().anyMatch(edge -> edge.getKey().equals(edgeKey));
+    }
 }

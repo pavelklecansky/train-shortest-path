@@ -42,7 +42,6 @@ public class MainController implements Initializable {
     public Button addRailButton;
     @FXML
     public Button deleteRailButton;
-
     @FXML
     public ListView<String> railSwitchListView;
     @FXML
@@ -57,6 +56,18 @@ public class MainController implements Initializable {
     public ListView<String> trainListView;
     @FXML
     public Label shortestPathLabel;
+    @FXML
+    public Button editRailSwitchButton;
+    @FXML
+    public Button deleteRailSwitchButton;
+    @FXML
+    public Button editRailButton;
+    @FXML
+    public Button addTrainButton;
+    @FXML
+    public Button editTrainButton;
+    @FXML
+    public Button deleteTrainButton;
     @FXML
     private Button importRailwayInfrastructureButton;
 
@@ -113,17 +124,95 @@ public class MainController implements Initializable {
         Dialog<RailDialogReturn> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<RailDialogReturn> result = dialog.showAndWait();
         result.ifPresent(rail -> {
-            railwayInfrastructure.addRail(rail.railName(), rail.startRailSwitchKey(), rail.endRailSwitchKey(), new Rail(rail.railName(), rail.railLength(), rail.train()));
+            railwayInfrastructure.addRail(rail.railName(), rail.startRailSwitchKey(), rail.endRailSwitchKey(), new Rail(rail.railName(), rail.railLength()));
             reloadUi();
         });
     }
 
     @FXML
     public void deleteRail(ActionEvent actionEvent) {
-        Dialog<Pair<String, String>> dialog = Utils.removeEdgeDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
-        Optional<Pair<String, String>> result = dialog.showAndWait();
+        Dialog<String> dialog = Utils.deleteRailDialog(railwayInfrastructure.getRails().stream().map(Rail::getName).sorted().distinct().toList());
+        Optional<String> result = dialog.showAndWait();
         result.ifPresent(rail -> {
-            railwayInfrastructure.deleteRail(rail.getKey(), rail.getValue());
+            railwayInfrastructure.deleteRail(rail);
+            reloadUi();
+        });
+    }
+
+    @FXML
+    public void editRailSwitch(ActionEvent actionEvent) {
+        Dialog<Pair<String, RailSwitch>> dialog = Utils.editRailSwitch(railwayInfrastructure);
+        Optional<Pair<String, RailSwitch>> result = dialog.showAndWait();
+        result.ifPresent(railSwitchPair -> {
+            try {
+                railwayInfrastructure.editRailSwitch(railSwitchPair.getKey(), railSwitchPair.getValue());
+                reloadUi();
+            } catch (Exception exception) {
+                Utils.alert(exception.getMessage());
+                System.out.println(exception);
+            }
+        });
+    }
+
+
+    @FXML
+    public void deleteRailSwitch(ActionEvent actionEvent) {
+        Dialog<String> dialog = Utils.deleteRailSwitch(railwayInfrastructure.getSwitchKeys());
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(railSwitch -> {
+            railwayInfrastructure.deleteRailSwitch(railSwitch);
+            reloadUi();
+        });
+    }
+
+    @FXML
+    public void editRail(ActionEvent actionEvent) {
+        Dialog<Pair<String, Rail>> dialog = Utils.editRail(railwayInfrastructure);
+        Optional<Pair<String, Rail>> result = dialog.showAndWait();
+        result.ifPresent(railPair -> {
+            try {
+                railwayInfrastructure.editRail(railPair.getKey(), railPair.getValue());
+                reloadUi();
+            } catch (Exception exception) {
+                Utils.alert(exception.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    public void addTrain(ActionEvent actionEvent) {
+        Dialog<Train> dialog = Utils.addTrainDialog(railwayInfrastructure);
+        Optional<Train> result = dialog.showAndWait();
+        result.ifPresent(rail -> {
+            try {
+                railwayInfrastructure.addTrain(rail);
+                reloadUi();
+            } catch (Exception exception) {
+                Utils.alert(exception.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    public void editTrain(ActionEvent actionEvent) {
+        Dialog<Pair<String, Train>> dialog = Utils.editTrainDialog(railwayInfrastructure);
+        Optional<Pair<String, Train>> result = dialog.showAndWait();
+        result.ifPresent(trainPair -> {
+            try {
+                railwayInfrastructure.editTrain(trainPair.getKey(), trainPair.getValue());
+                reloadUi();
+            } catch (Exception exception) {
+                Utils.alert(exception.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    public void deleteTrain(ActionEvent actionEvent) {
+        Dialog<String> dialog = Utils.deleteTrain(railwayInfrastructure.getTrains().stream().map(Train::getName).toList());
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(rail -> {
+            railwayInfrastructure.deleteTrain(rail);
             reloadUi();
         });
     }
@@ -173,6 +262,12 @@ public class MainController implements Initializable {
         deleteRailButton.setDisable(false);
         exportRailwayInfrastructureButton.setDisable(false);
         shortestPathButton.setDisable(false);
+        editRailSwitchButton.setDisable(false);
+        deleteTrainButton.setDisable(false);
+        deleteRailSwitchButton.setDisable(false);
+        addTrainButton.setDisable(false);
+        editTrainButton.setDisable(false);
+        editRailButton.setDisable(false);
     }
 
     private File getFileFromFileChooser() {

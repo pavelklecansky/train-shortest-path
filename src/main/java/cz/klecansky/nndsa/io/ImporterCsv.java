@@ -33,7 +33,7 @@ public class ImporterCsv {
                 String trainName = trainSplit[0];
                 double trainLength = Double.parseDouble(trainSplit[1]);
                 String railNear = trainSplit[2];
-                newTrain = new Train(trainName, trainLength, railNear);
+                newTrain = new Train(trainName, trainLength, railNear, railName);
                 railwayInfrastructure.setTrainNearFor(railNear);
             }
             railwayInfrastructure.addRail(railName, startRailSwitchKey, endRailSwitchKey, new Rail(railName, railLength, newTrain));

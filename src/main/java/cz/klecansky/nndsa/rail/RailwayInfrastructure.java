@@ -7,6 +7,7 @@ import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.utils.Triplet;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RailwayInfrastructure {
     private final Graph<String, RailSwitch, Rail> graph;
@@ -73,5 +74,72 @@ public class RailwayInfrastructure {
 
     public List<String> getSwitchKeys() {
         return getSwitches().stream().map(RailSwitch::getName).toList();
+    }
+
+    public void deleteRail(String rail) {
+        graph.deleteEdge(rail);
+    }
+
+    public Rail getRail(String rail) {
+        return graph.getEdgeValue(rail);
+    }
+
+    public void addTrain(Train train) {
+        Rail rail = getRail(train.getRail());
+        if (rail.getLength() < train.getLength()) {
+            throw new IllegalArgumentException("Train is longer then rail");
+        }
+        graph.getEdgeValue(train.getRail()).setTrain(train);
+    }
+
+    public void deleteTrain(String trainName) {
+        Optional<Train> first = getTrains().stream().filter(train -> train.getName().equals(trainName)).findFirst();
+        if (first.isPresent()) {
+            Train train = first.get();
+            Rail rail = getRail(train.getRail());
+            rail.removeTrain();
+        }
+    }
+
+    public void deleteRailSwitch(String railSwitch) {
+        graph.deleteVertex(railSwitch);
+    }
+
+    public Train getTrain(String trainName) {
+        return getTrains().stream().filter(train -> train.getName().equals(trainName)).findFirst().get();
+    }
+
+    public void editTrain(String key, Train value) {
+        Train train = getTrain(key);
+        Rail rail = getRail(train.getRail());
+        addTrain(value);
+        if (!value.getRail().equals(rail.getName())) {
+            rail.setTrain(null);
+        }
+    }
+
+    public RailSwitch getRailSwitch(String railKey) {
+        return graph.getVertexValue(railKey);
+    }
+
+    public void editRailSwitch(String key, RailSwitch value) {
+        renameRailSwitch(key, value.getName());
+    }
+
+    private void renameRailSwitch(String oldName, String newName) {
+        RailSwitch railSwitch = getRailSwitch(oldName);
+        railSwitch.setName(newName);
+        graph.renameVertex(oldName, newName);
+        List<Train> trains = getTrains().stream().filter(train -> train.getNearRailSwitch().equals(oldName)).toList();
+        trains.forEach(train -> train.setNearRailSwitch(newName));
+    }
+
+    public void editRail(String key, Rail value) {
+        if (value.getLength() < value.getTrain().getLength()) {
+            throw new IllegalArgumentException("Cannot make rail smaller then train on rail.");
+        }
+        graph.setEdge(key, value.getName(), value);
+        Rail rail = getRail(value.getName());
+        rail.getTrain().setRail(rail.getName());
     }
 }

@@ -5,7 +5,6 @@ import cz.klecansky.nndsa.rail.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -56,6 +55,236 @@ public final class Utils {
         return dialog;
     }
 
+    public static Dialog<Pair<String, RailSwitch>> editRailSwitch(RailwayInfrastructure infrastructure) {
+        Dialog<Pair<String, RailSwitch>> dialog = new Dialog<>();
+        dialog.setTitle("Edit rail switch");
+        dialog.setHeaderText("Edit rail switch in infrastructure");
+
+        ButtonType addButtonType = new ButtonType("Edit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        List<String> railSwitchKey = new ArrayList<>(infrastructure.getSwitchKeys());
+        Utils.SortForRailsAndRailsSwitches(railSwitchKey);
+
+        ChoiceBox<String> railSwitchSelect = new ChoiceBox<>();
+        railSwitchSelect.getItems().addAll(railSwitchKey);
+
+        TextField railSwitchName = new TextField();
+        railSwitchName.setDisable(true);
+
+        railSwitchSelect.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            RailSwitch railSwitch = infrastructure.getRailSwitch(newValue);
+            railSwitchName.setText(railSwitch.getName());
+            railSwitchName.setDisable(false);
+        });
+
+        grid.add(new Label("Select rail switch: "), 0, 0);
+        grid.add(railSwitchSelect, 1, 0);
+        grid.add(new Label("Rail switch name: "), 0, 1);
+        grid.add(railSwitchName, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return new Pair<>(railSwitchSelect.getValue(), new RailSwitch(railSwitchName.getText(), RailSwitchType.NONE));
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
+    public static Dialog<Pair<String, Rail>> editRail(RailwayInfrastructure infrastructure) {
+        Dialog<Pair<String, Rail>> dialog = new Dialog<>();
+        dialog.setTitle("Edit rail");
+        dialog.setHeaderText("Edit rail in infrastructure");
+
+        ButtonType addButtonType = new ButtonType("Edit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        List<String> railKey = new ArrayList<>(infrastructure.getRails().stream().map(Rail::getName).sorted().distinct().toList());
+        Utils.SortForRailsAndRailsSwitches(railKey);
+
+        ChoiceBox<String> railSelection = new ChoiceBox<>();
+        railSelection.getItems().addAll(railKey);
+
+        TextField railName = new TextField();
+        railName.setDisable(true);
+        TextField railLength = new TextField();
+        railLength.setDisable(true);
+
+        ChoiceBox<Train> train = new ChoiceBox<>();
+
+        railSelection.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            Rail rail = infrastructure.getRail(newValue);
+            railName.setText(rail.getName());
+            railName.setDisable(false);
+            railLength.setText(String.valueOf(rail.getLength()));
+            railLength.setDisable(false);
+            train.setValue(rail.getTrain());
+        });
+
+        grid.add(new Label("Select rail: "), 0, 0);
+        grid.add(railSelection, 1, 0);
+        grid.add(new Label("Rail name: "), 0, 1);
+        grid.add(railName, 1, 1);
+        grid.add(new Label("Rail length: "), 0, 2);
+        grid.add(railLength, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return new Pair<>(railSelection.getValue(), new Rail(railName.getText(), Double.parseDouble(railLength.getText()), train.getValue()));
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
+    public static Dialog<Pair<String, Train>> editTrainDialog(RailwayInfrastructure infrastructure) {
+        Dialog<Pair<String, Train>> dialog = new Dialog<>();
+        dialog.setTitle("Edit train");
+        dialog.setHeaderText("Edit train in infrastructure");
+
+        ButtonType addButtonType = new ButtonType("Edit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        List<String> railSwitchKey = new ArrayList<>(infrastructure.getSwitchKeys());
+        Utils.SortForRailsAndRailsSwitches(railSwitchKey);
+
+        ChoiceBox<String> trainSelection = new ChoiceBox<>();
+        trainSelection.getItems().addAll(infrastructure.getTrains().stream().map(Train::getName).toList());
+
+
+        TextField trainName = new TextField();
+        trainName.setDisable(true);
+        TextField trainLength = new TextField();
+        trainLength.setDisable(true);
+
+        ChoiceBox<String> nearRailSwitch = new ChoiceBox<>();
+        nearRailSwitch.getItems().addAll(railSwitchKey);
+        nearRailSwitch.setDisable(true);
+
+        ChoiceBox<String> rail = new ChoiceBox<>();
+        rail.setDisable(true);
+
+
+        trainSelection.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            Train train = infrastructure.getTrain(newValue);
+            trainName.setText(train.getName());
+            trainName.setDisable(false);
+            trainLength.setText(String.valueOf(train.getLength()));
+            trainLength.setDisable(false);
+            nearRailSwitch.setValue(train.getNearRailSwitch());
+            nearRailSwitch.setDisable(false);
+            rail.setValue(train.getRail());
+            rail.setDisable(false);
+
+        });
+
+        nearRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            rail.getItems().clear();
+
+            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            rail.getItems().addAll(neighbours);
+            rail.setDisable(false);
+        });
+
+        grid.add(new Label("Select train: "), 0, 0);
+        grid.add(trainSelection, 1, 0);
+        grid.add(new Label("Train name: "), 0, 1);
+        grid.add(trainName, 1, 1);
+        grid.add(new Label("Train length: "), 0, 2);
+        grid.add(trainLength, 1, 2);
+        grid.add(new Label("Near rail switch:"), 0, 3);
+        grid.add(nearRailSwitch, 1, 3);
+        grid.add(new Label("Rail:"), 0, 4);
+        grid.add(rail, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return new Pair<>(trainSelection.getValue(), new Train(trainName.getText(), Double.parseDouble(trainLength.getText()), nearRailSwitch.getValue(), rail.getValue()));
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
+    public static Dialog<Train> addTrainDialog(RailwayInfrastructure infrastructure) {
+        Dialog<Train> dialog = new Dialog<>();
+        dialog.setTitle("Add train");
+        dialog.setHeaderText("Add new train to infrastructure");
+
+        ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        List<String> railSwitchKey = new ArrayList<>(infrastructure.getSwitchKeys());
+        Utils.SortForRailsAndRailsSwitches(railSwitchKey);
+
+        ChoiceBox<String> nearRailSwitch = new ChoiceBox<>();
+        nearRailSwitch.getItems().addAll(railSwitchKey);
+
+        ChoiceBox<String> rail = new ChoiceBox<>();
+        rail.setDisable(true);
+
+        nearRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            rail.getItems().clear();
+
+            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            rail.getItems().addAll(neighbours);
+            rail.setDisable(false);
+        });
+
+        TextField trainName = new TextField();
+        TextField trainLength = new TextField();
+
+        grid.add(new Label("Train name: "), 0, 0);
+        grid.add(trainName, 1, 0);
+        grid.add(new Label("Train length: "), 0, 1);
+        grid.add(trainLength, 1, 1);
+        grid.add(new Label("Near rail switch:"), 0, 2);
+        grid.add(nearRailSwitch, 1, 2);
+        grid.add(new Label("Rail:"), 0, 3);
+        grid.add(rail, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return new Train(trainName.getText(), Double.parseDouble(trainLength.getText()), nearRailSwitch.getValue(), rail.getValue());
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
     public static Dialog<RailDialogReturn> railDialog(List<String> vertices) {
         Dialog<RailDialogReturn> dialog = new Dialog<>();
         dialog.setTitle("Add rail");
@@ -68,7 +297,6 @@ public final class Utils {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
-
 
         List<String> verticesKey = new ArrayList<>(vertices);
         Utils.SortForRailsAndRailsSwitches(verticesKey);
@@ -83,15 +311,6 @@ public final class Utils {
 
         TextField numberField = new TextField();
 
-        Separator separator = new Separator();
-
-        Text trainText = new Text("Train");
-        trainText.setStyle("-fx-font-weight: bold");
-        trainText.setStyle("-fx-font-size: 16px");
-
-        TextField trainName = new TextField();
-        TextField trainLength = new TextField();
-
         grid.add(new Label("Rail name:"), 0, 0);
         grid.add(railName, 1, 0);
         grid.add(new Label("First rail switch:"), 0, 1);
@@ -100,22 +319,12 @@ public final class Utils {
         grid.add(secondVertex, 1, 2);
         grid.add(new Label("Weight: "), 0, 3);
         grid.add(numberField, 1, 3);
-        grid.add(separator, 0, 4, 2, 1);
-        grid.add(trainText, 0, 5, 1, 1);
-        grid.add(new Label("Train name: "), 0, 6);
-        grid.add(trainName, 1, 6);
-        grid.add(new Label("Train length: "), 0, 7);
-        grid.add(trainLength, 1, 7);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                Train train = null;
-                if (!trainText.getText().trim().isEmpty() && !trainLength.getText().trim().isEmpty()) {
-                    train = new Train(trainName.getText(), Double.parseDouble(trainLength.getText()));
-                }
-                return new RailDialogReturn(railName.getText(), firstVertex.getValue(), secondVertex.getValue(), Double.parseDouble(numberField.getText()), train);
+                return new RailDialogReturn(railName.getText(), firstVertex.getValue(), secondVertex.getValue(), Double.parseDouble(numberField.getText()));
             }
             return null;
         });
@@ -123,8 +332,52 @@ public final class Utils {
         return dialog;
     }
 
-    public static Dialog<Pair<String, String>> removeEdgeDialog(List<String> vertices) {
-        return new Dialog<>();
+
+    public static Dialog<String> deleteRailSwitch(List<String> list) {
+        return deleteDialog(list, "Remove rail switch", "Remove rail switch from infrastructure");
+    }
+
+    public static Dialog<String> deleteTrain(List<String> list) {
+        return deleteDialog(list, "Remove train", "Remove train from infrastructure");
+    }
+
+    public static Dialog<String> deleteRailDialog(List<String> list) {
+        return deleteDialog(list, "Remove rail", "Remove rail from infrastructure");
+    }
+
+    public static Dialog<String> deleteDialog(List<String> vertices, String title, String headerText) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(headerText);
+
+        ButtonType addButtonType = new ButtonType("Remove", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        List<String> verticesKey = new ArrayList<>(vertices);
+        Utils.SortForRailsAndRailsSwitches(verticesKey);
+
+        ChoiceBox<String> rails = new ChoiceBox<>();
+        rails.getItems().addAll(verticesKey);
+
+
+        grid.add(new Label("Rail:"), 0, 0);
+        grid.add(rails, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == addButtonType) {
+                return rails.getValue();
+            }
+            return null;
+        });
+
+        return dialog;
     }
 
     public static Dialog<ShortestPathDialogReturn> shortestPathDialog(RailwayInfrastructure infrastructure) {
@@ -198,7 +451,7 @@ public final class Utils {
         return dialog;
     }
 
-    public static void alert(String message){
+    public static void alert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Dialog");
         alert.setHeaderText(message);

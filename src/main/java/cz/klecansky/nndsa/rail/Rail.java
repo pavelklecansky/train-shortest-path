@@ -7,6 +7,10 @@ public class Rail implements Comparable<Rail> {
     private double length;
     private Train train;
 
+    public Rail(String name, double length) {
+        this(name, length, null);
+    }
+
     public Rail(String name, double length, Train train) {
         this.name = name;
         this.length = length;
@@ -37,6 +41,9 @@ public class Rail implements Comparable<Rail> {
         return name;
     }
 
+    public void removeTrain() {
+        train = null;
+    }
 
     @Override
     public String toString() {

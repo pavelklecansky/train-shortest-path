@@ -3,18 +3,16 @@ package cz.klecansky.nndsa.rail;
 import java.util.Objects;
 
 public final class Train implements Comparable<Train> {
-    private final String name;
-    private final double length;
-    private final String nearRail;
+    private String name;
+    private double length;
+    private String nearRailSwitch;
+    private String rail;
 
-    public Train(String name, double length) {
-        this(name, length, null);
-    }
-
-    public Train(String name, double length, String nearRail) {
+    public Train(String name, double length, String nearRail, String rail) {
         this.name = name;
         this.length = length;
-        this.nearRail = nearRail;
+        this.nearRailSwitch = nearRail;
+        this.rail = rail;
     }
 
     public String getName() {
@@ -25,10 +23,29 @@ public final class Train implements Comparable<Train> {
         return length;
     }
 
-    public String getNearRail() {
-        return nearRail;
+    public String getNearRailSwitch() {
+        return nearRailSwitch;
     }
 
+    public String getRail() {
+        return rail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    public void setNearRailSwitch(String nearRailSwitch) {
+        this.nearRailSwitch = nearRailSwitch;
+    }
+
+    public void setRail(String rail) {
+        this.rail = rail;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,11 +64,7 @@ public final class Train implements Comparable<Train> {
 
     @Override
     public String toString() {
-        return "Train{" +
-                "name='" + name + '\'' +
-                ", length=" + length +
-                ", nearRail='" + nearRail + '\'' +
-                '}';
+        return String.format("%s: length: %1.2f | rail: %s | near: %s", name, length, rail, nearRailSwitch);
     }
 
     @Override

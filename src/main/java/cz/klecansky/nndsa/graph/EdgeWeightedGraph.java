@@ -55,6 +55,12 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
 
     @Override
     public Vertex<Key, VValue, EValue> vertexByKey(Key vertexKey) {
+        if (vertexKey == null) {
+            throw new IllegalArgumentException("Vertex key is null.");
+        }
+        if (!vertices.containsKey(vertexKey)) {
+            throw new IllegalArgumentException("Vertex with this key is not in graph.");
+        }
         return vertices.get(vertexKey);
     }
 
@@ -127,6 +133,40 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     @Override
     public List<Triplet<Key, Key, EValue>> getDetailEdgeValues() {
         return getEdges().stream().map(stringRailEdge -> new Triplet<>(stringRailEdge.getStart().getKey(), stringRailEdge.getTarget().getKey(), stringRailEdge.getValue())).toList();
+    }
+
+    @Override
+    public void deleteEdge(Key edgeKey) {
+        List<Vertex<Key, VValue, EValue>> verticesWithEdgeKey = vertices.values().stream().filter(vertex -> vertex.hasEdge(edgeKey)).toList();
+        verticesWithEdgeKey.forEach(vertex -> vertex.deleteEdgeExact(edgeKey));
+    }
+
+    @Override
+    public void deleteVertex(Key vertexKey) {
+        getVertexEdgeKeys(vertexKey).forEach(this::deleteEdge);
+        vertices.remove(vertexKey);
+    }
+
+    @Override
+    public void renameVertex(Key oldName, Key newName) {
+        Vertex<Key, VValue, EValue> vertex = vertices.get(oldName);
+        vertex.setKey(newName);
+        vertices.remove(oldName);
+        vertices.put(newName, vertex);
+    }
+
+    @Override
+    public void setEdge(Key oldKey, Key newKey, EValue eValue) {
+        List<Vertex<Key, VValue, EValue>> edgeVertices = getEdgeVertices(oldKey);
+        edgeVertices.forEach(vertex -> {
+            Edge<Key, VValue, EValue> first = vertex.getEdges().stream().filter(edge -> edge.getKey().equals(oldKey)).findFirst().get();
+            first.setKey(newKey);
+            first.setValue(eValue);
+        });
+    }
+
+    private List<Vertex<Key, VValue, EValue>> getEdgeVertices(Key key) {
+        return getVertices().stream().filter(vertex -> vertex.hasEdge(key)).toList();
     }
 
 

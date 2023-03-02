@@ -3,8 +3,8 @@ package cz.klecansky.nndsa.graph;
 import java.util.Objects;
 
 public class Edge<Key extends Comparable<Key>, VValue, EValue> implements Comparable<Edge<Key, VValue, EValue>> {
-    private final Key key;
-    private final EValue value;
+    private Key key;
+    private EValue value;
     private final Vertex<Key, VValue, EValue> start;
     private final Vertex<Key, VValue, EValue> target;
 
@@ -29,6 +29,14 @@ public class Edge<Key extends Comparable<Key>, VValue, EValue> implements Compar
 
     public Key getKey() {
         return key;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public void setValue(EValue value) {
+        this.value = value;
     }
 
     @Override

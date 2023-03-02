@@ -28,7 +28,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     void clearDijkstra();
 
-    VValue getVertexValue(Key railNear);
+    VValue getVertexValue(Key vertexKey);
 
     Edge<Key, VValue, EValue> edgeByKey(Key from);
 
@@ -36,7 +36,15 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     List<Triplet<Key, Key, EValue>> getDistinctDetailEdgeValues();
 
-    EValue getEdgeValue(Key railSwitchStart);
+    EValue getEdgeValue(Key edgeKey);
 
     List<Triplet<Key, Key,EValue>> getDetailEdgeValues();
+
+    void deleteEdge(Key edgeKey);
+
+    void deleteVertex(Key vertexKey);
+
+    void renameVertex(Key oldName, Key newName);
+
+    void setEdge(Key oldKey, Key newKey, EValue eValue);
 }

@@ -25,15 +25,45 @@
             </Button>
             <Button fx:id="addRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#addRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Add rail switch">
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets top="20.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addRailButton" disable="true" mnemonicParsing="false" onAction="#addRail" prefHeight="26.0" prefWidth="200.0" text="Add Rail">
+            <Button fx:id="editRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#editRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Edit rail switch">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteRailButton" disable="true" mnemonicParsing="false" onAction="#deleteRail" prefHeight="26.0" prefWidth="200.0" text="Delete Rail">
+            <Button fx:id="deleteRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#deleteRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Delete rail switch">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="addRailButton" disable="true" mnemonicParsing="false" onAction="#addRail" prefHeight="26.0" prefWidth="200.0" text="Add rail">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="editRailButton" disable="true" mnemonicParsing="false" onAction="#editRail" prefHeight="26.0" prefWidth="200.0" text="Edit rail">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="deleteRailButton" disable="true" mnemonicParsing="false" onAction="#deleteRail" prefHeight="26.0" prefWidth="200.0" text="Delete rail">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="addTrainButton" disable="true" mnemonicParsing="false" onAction="#addTrain" prefHeight="26.0" prefWidth="200.0" text="Add train">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="editTrainButton" disable="true" mnemonicParsing="false" onAction="#editTrain" prefHeight="26.0" prefWidth="200.0" text="Edit train">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="deleteTrainButton" disable="true" mnemonicParsing="false" onAction="#deleteTrain" prefHeight="26.0" prefWidth="200.0" text="Delete train">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
