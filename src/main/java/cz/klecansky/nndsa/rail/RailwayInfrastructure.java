@@ -48,8 +48,12 @@ public class RailwayInfrastructure {
     public List<Vertex<String, RailSwitch, Rail>> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
         graph.clearDijkstra();
         Rail startRail = graph.getEdgeValue(railSwitchStart);
-        if (startRail.getLength() < trainLength) {
+        if (startRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train cannot have bigger length than starting rail.");
+        }
+        Rail endRail = graph.getEdgeValue(railSwitchEnd);
+        if (endRail.getVacancy() < trainLength) {
+            throw new IllegalArgumentException("Train has not enough space to fit in ending rail.");
         }
         Dijkstra dijkstra = new Dijkstra();
         Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);

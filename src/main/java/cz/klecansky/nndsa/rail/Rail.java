@@ -1,6 +1,7 @@
 package cz.klecansky.nndsa.rail;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class Rail implements Comparable<Rail> {
     private final String name;
@@ -39,6 +40,10 @@ public class Rail implements Comparable<Rail> {
 
     public String getName() {
         return name;
+    }
+
+    public double getVacancy() {
+        return length - Optional.ofNullable(train).map(Train::getLength).orElse(0.0);
     }
 
     public void removeTrain() {
