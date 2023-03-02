@@ -1,6 +1,7 @@
 package cz.klecansky.nndsa.rail;
 
 import cz.klecansky.nndsa.algorithms.Dijkstra;
+import cz.klecansky.nndsa.algorithms.ShortestPathDisplay;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
@@ -60,7 +61,7 @@ public class RailwayInfrastructure {
         return graph.getDetailEdgeValues();
     }
 
-    public List<Vertex<String, RailSwitch, Rail>> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
+    public List<ShortestPathDisplay> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
         graph.clearDijkstra();
         Rail startRail = graph.getEdgeValue(railSwitchStart);
         if (startRail.getVacancy() < trainLength) {

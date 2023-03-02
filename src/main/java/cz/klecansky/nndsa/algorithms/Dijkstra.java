@@ -23,18 +23,22 @@ public class Dijkstra {
                 if (v.getValue().isTrainNear()) {
                     continue;
                 }
+                double weight = edge.getValue().getLength();
+
                 if (vertex.getPreviosVertex() != null) {
                     if (infrastructure.isCrossing(vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey())) {
                         System.out.printf("Illegal Path: %s->%s->%s%n", vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey());
                         Set<Edge<String, RailSwitch, Rail>> reversePath = getReversePath(vertex.getPreviosVertex(), vertex, edge.getTarget(), trainLength);
                         System.out.println(reversePath);
-                        if (vertex.getKey().equals("v14")) {
+                        double reversePathSum = reversePath.stream().map(Edge::getValue).map(Rail::getLength).mapToDouble(Double::doubleValue).sum();
+                        if (reversePathSum < trainLength) {
                             continue;
                         }
+                        weight += trainLength;
                     }
                     System.out.println(vertex.getPreviosVertex().getKey() + "->" + vertex.getKey() + " -> " + edge.getTarget().getKey());
                 }
-                double weight = edge.getValue().getLength();
+
                 double minDistance = vertex.getMinDistance() + weight;
                 if (minDistance < v.getMinDistance()) {
                     priorityQueue.remove(vertex);
@@ -54,7 +58,10 @@ public class Dijkstra {
 
         stack.push(currentVertex);
 
-        while (!stack.isEmpty() && totalWeight <= threshold) {
+        while (!stack.isEmpty()) {
+            if (threshold <= totalWeight) {
+                break;
+            }
             Vertex<String, RailSwitch, Rail> current = stack.pop();
             if (!visited.contains(current)) {
                 visited.add(current);
@@ -62,6 +69,9 @@ public class Dijkstra {
                 for (Edge<String, RailSwitch, Rail> e : current.getEdges()) {
                     Vertex<String, RailSwitch, Rail> neighbor = e.getTarget();
                     if (isPartOfOldCrossing(neighbor, from, destination)) {
+                        continue;
+                    }
+                    if (neighbor.getValue().isTrainNear()) {
                         continue;
                     }
                     double edgeWeight = e.getValue().getLength();
@@ -85,11 +95,11 @@ public class Dijkstra {
         return currentVertex.getEdges().stream().map(Edge::getTarget).toList();
     }
 
-    public List<Vertex<String, RailSwitch, Rail>> getShortestPathTo(Vertex<String, RailSwitch, Rail> targetVertex) {
-        List<Vertex<String, RailSwitch, Rail>> path = new ArrayList<>();
+    public List<ShortestPathDisplay> getShortestPathTo(Vertex<String, RailSwitch, Rail> targetVertex) {
+        List<ShortestPathDisplay> path = new ArrayList<>();
 
         for (Vertex<String, RailSwitch, Rail> vertex = targetVertex; vertex != null; vertex = vertex.getPreviosVertex()) {
-            path.add(vertex);
+            path.add(new ShortestPathDisplay(vertex.getKey(), vertex.getMinDistance()));
         }
 
         Collections.reverse(path);
