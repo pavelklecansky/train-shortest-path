@@ -2,8 +2,6 @@ package cz.klecansky.nndsa.graph;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class EdgeTest {
@@ -25,8 +23,6 @@ class EdgeTest {
 
         Edge<String, Double, Integer> firstEdge = new Edge<>("e1", first, second, 100);
         Edge<String, Double, Integer> secondEdge = new Edge<>("e1", second, first, 100);
-
-        List<Edge<String, Double, Integer>> firstEdge1 = List.of(firstEdge, secondEdge);
 
         assertEquals(firstEdge, secondEdge);
     }

@@ -7,11 +7,9 @@ import java.util.*;
 public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> implements Graph<Key, VValue, EValue> {
 
     private final Map<Key, Vertex<Key, VValue, EValue>> vertices;
-    private final List<Edge<Key, VValue, EValue>> undirectedEdges;
 
     public EdgeWeightedGraph() {
         vertices = new HashMap<>();
-        undirectedEdges = new ArrayList<>();
     }
 
     @Override
@@ -39,7 +37,6 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
         Edge<Key, VValue, EValue> firstEdge = new Edge<>(key, firstVertex, secondVertex, value);
         Edge<Key, VValue, EValue> secondEdge = new Edge<>(key, secondVertex, firstVertex, value);
 
-        undirectedEdges.add(firstEdge);
         firstVertex.addEdge(firstEdge);
         secondVertex.addEdge(secondEdge);
     }
@@ -62,26 +59,6 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
             throw new IllegalArgumentException("Vertex with this key is not in graph.");
         }
         return vertices.get(vertexKey);
-    }
-
-    @Override
-    public Set<Key> getVerticesKey() {
-        return vertices.keySet();
-    }
-
-    @Override
-    public List<Edge<Key, VValue, EValue>> getEdges() {
-        return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
-    }
-
-    @Override
-    public List<Vertex<Key, VValue, EValue>> getVertices() {
-        return vertices.values().stream().toList();
-    }
-
-    @Override
-    public List<Edge<Key, VValue, EValue>> getUndirectedEdges() {
-        return undirectedEdges;
     }
 
     @Override
@@ -108,11 +85,6 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
             throw new IllegalArgumentException("Vertex with this key is not in graph.");
         }
         return vertices.get(key).getValue();
-    }
-
-    @Override
-    public Edge<Key, VValue, EValue> edgeByKey(Key from) {
-        return getEdges().stream().filter(keyVValueEValueEdge -> keyVValueEValueEdge.getKey().equals(from)).findFirst().get();
     }
 
     @Override
@@ -165,10 +137,21 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
         });
     }
 
+    public List<Edge<Key, VValue, EValue>> getEdges() {
+        return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
+    }
+
+    private Edge<Key, VValue, EValue> edgeByKey(Key from) {
+        return getEdges().stream().filter(keyVValueEValueEdge -> keyVValueEValueEdge.getKey().equals(from)).findFirst().get();
+    }
+
     private List<Vertex<Key, VValue, EValue>> getEdgeVertices(Key key) {
         return getVertices().stream().filter(vertex -> vertex.hasEdge(key)).toList();
     }
 
+    private List<Vertex<Key, VValue, EValue>> getVertices() {
+        return vertices.values().stream().toList();
+    }
 
     private boolean isVertexNotInGraph(Key vertexKey) {
         return !vertices.containsKey(vertexKey);

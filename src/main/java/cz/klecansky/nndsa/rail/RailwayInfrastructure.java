@@ -45,11 +45,6 @@ public class RailwayInfrastructure {
         return graph.getDetailEdgeValues();
     }
 
-
-    public void deleteRail(String first, String second) {
-        graph.deleteEdge(first, second);
-    }
-
     public List<Vertex<String, RailSwitch, Rail>> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
         graph.clearDijkstra();
         Rail startRail = graph.getEdgeValue(railSwitchStart);

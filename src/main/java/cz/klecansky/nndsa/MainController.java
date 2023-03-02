@@ -104,13 +104,13 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void exportRailwayInfrastructure(ActionEvent actionEvent) throws IOException {
+    public void exportRailwayInfrastructure() throws IOException {
         File fileForSaveFromFileChooser = getFileForSaveFromFileChooser();
         exporterCsv.exportGraph(fileForSaveFromFileChooser, railwayInfrastructure);
     }
 
     @FXML
-    public void addRailSwitch(ActionEvent actionEvent) {
+    public void addRailSwitch() {
         Dialog<RailSwitch> dialog = Utils.railSwitchDialog();
         Optional<RailSwitch> result = dialog.showAndWait();
         result.ifPresent(railSwitch -> {
@@ -120,7 +120,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void addRail(ActionEvent actionEvent) {
+    public void addRail() {
         Dialog<RailDialogReturn> dialog = Utils.railDialog(railwayInfrastructure.getSwitches().stream().map(RailSwitch::getName).toList());
         Optional<RailDialogReturn> result = dialog.showAndWait();
         result.ifPresent(rail -> {
@@ -130,7 +130,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void deleteRail(ActionEvent actionEvent) {
+    public void deleteRail() {
         Dialog<String> dialog = Utils.deleteRailDialog(railwayInfrastructure.getRails().stream().map(Rail::getName).sorted().distinct().toList());
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(rail -> {
@@ -140,7 +140,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void editRailSwitch(ActionEvent actionEvent) {
+    public void editRailSwitch() {
         Dialog<Pair<String, RailSwitch>> dialog = Utils.editRailSwitch(railwayInfrastructure);
         Optional<Pair<String, RailSwitch>> result = dialog.showAndWait();
         result.ifPresent(railSwitchPair -> {
@@ -149,14 +149,13 @@ public class MainController implements Initializable {
                 reloadUi();
             } catch (Exception exception) {
                 Utils.alert(exception.getMessage());
-                System.out.println(exception);
             }
         });
     }
 
 
     @FXML
-    public void deleteRailSwitch(ActionEvent actionEvent) {
+    public void deleteRailSwitch() {
         Dialog<String> dialog = Utils.deleteRailSwitch(railwayInfrastructure.getSwitchKeys());
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(railSwitch -> {
@@ -166,7 +165,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void editRail(ActionEvent actionEvent) {
+    public void editRail() {
         Dialog<Pair<String, Rail>> dialog = Utils.editRail(railwayInfrastructure);
         Optional<Pair<String, Rail>> result = dialog.showAndWait();
         result.ifPresent(railPair -> {
@@ -180,7 +179,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void addTrain(ActionEvent actionEvent) {
+    public void addTrain() {
         Dialog<Train> dialog = Utils.addTrainDialog(railwayInfrastructure);
         Optional<Train> result = dialog.showAndWait();
         result.ifPresent(rail -> {
@@ -194,7 +193,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void editTrain(ActionEvent actionEvent) {
+    public void editTrain() {
         Dialog<Pair<String, Train>> dialog = Utils.editTrainDialog(railwayInfrastructure);
         Optional<Pair<String, Train>> result = dialog.showAndWait();
         result.ifPresent(trainPair -> {
@@ -208,7 +207,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void deleteTrain(ActionEvent actionEvent) {
+    public void deleteTrain() {
         Dialog<String> dialog = Utils.deleteTrain(railwayInfrastructure.getTrains().stream().map(Train::getName).toList());
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(rail -> {
@@ -218,7 +217,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void shortestPath(ActionEvent actionEvent) {
+    public void shortestPath() {
         Dialog<ShortestPathDialogReturn> dialog = Utils.shortestPathDialog(railwayInfrastructure);
         Optional<ShortestPathDialogReturn> result = dialog.showAndWait();
         result.ifPresent(shortestPathReturn -> {
