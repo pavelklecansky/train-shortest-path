@@ -6,14 +6,17 @@ import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.utils.Triplet;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class RailwayInfrastructure {
     private final Graph<String, RailSwitch, Rail> graph;
+    private final List<Crossing> crossings;
 
     public RailwayInfrastructure() {
         this.graph = new EdgeWeightedGraph<>();
+        this.crossings = new ArrayList<>();
     }
 
     public void addSwitch(RailSwitch railSwitch) {
@@ -36,6 +39,18 @@ public class RailwayInfrastructure {
         return getRails().stream().filter(Rail::hasTrain).map(Rail::getTrain).sorted().distinct().toList();
     }
 
+    public void addCrossing(Crossing crossing) {
+        crossings.add(crossing);
+    }
+
+    public boolean isCrossing(String key, String key1, String key2){
+        RailSwitch firstOuter = getRailSwitch(key);
+        RailSwitch middle = getRailSwitch(key1);
+        RailSwitch secondOuter = getRailSwitch(key2);
+        Crossing crossing = new Crossing(firstOuter, middle, secondOuter);
+
+        return crossings.contains(crossing);
+    }
 
     public List<Triplet<String, String, Rail>> getDistinctRailsDetailInfo() {
         return graph.getDistinctDetailEdgeValues();
@@ -57,7 +72,7 @@ public class RailwayInfrastructure {
         }
         Dijkstra dijkstra = new Dijkstra();
         Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);
-        dijkstra.computePath(sourceVertex);
+        dijkstra.computePath(sourceVertex, this);
         Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(toVia);
         return dijkstra.getShortestPathTo(targetVertex);
     }

@@ -2,16 +2,15 @@ package cz.klecansky.nndsa.rail;
 
 public class RailSwitch {
     private String name;
-    private RailSwitchType type;
+    private boolean crossing;
     private boolean trainNear;
 
-    public RailSwitch(String name, RailSwitchType type) {
-        this(name, type, false);
+    public RailSwitch(String name) {
+        this(name, false);
     }
 
-    public RailSwitch(String name, RailSwitchType type, boolean trainNear) {
+    public RailSwitch(String name, boolean trainNear) {
         this.name = name;
-        this.type = type;
         this.trainNear = trainNear;
     }
 
@@ -23,14 +22,6 @@ public class RailSwitch {
         this.name = name;
     }
 
-    public RailSwitchType getType() {
-        return type;
-    }
-
-    public void setType(RailSwitchType type) {
-        this.type = type;
-    }
-
     public boolean isTrainNear() {
         return trainNear;
     }
@@ -39,8 +30,16 @@ public class RailSwitch {
         this.trainNear = trainNear;
     }
 
+    public boolean isCrossing() {
+        return crossing;
+    }
+
+    public void setCrossing(boolean crossing) {
+        this.crossing = crossing;
+    }
+
     @Override
     public String toString() {
-        return name + ": Type:" + type;
+        return name;
     }
 }

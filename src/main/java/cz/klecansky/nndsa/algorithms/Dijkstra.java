@@ -4,12 +4,14 @@ import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.rail.RailSwitch;
+import cz.klecansky.nndsa.rail.RailwayInfrastructure;
+import cz.klecansky.nndsa.utils.Utils;
 
 import java.util.*;
 
 public class Dijkstra {
 
-    public void computePath(Vertex<String, RailSwitch, Rail> sourceVertex) {
+    public void computePath(Vertex<String, RailSwitch, Rail> sourceVertex, RailwayInfrastructure infrastructure) {
         sourceVertex.setMinDistance(0);
         PriorityQueue<Vertex<String, RailSwitch, Rail>> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(sourceVertex);
@@ -18,6 +20,12 @@ public class Dijkstra {
             Vertex<String, RailSwitch, Rail> vertex = priorityQueue.poll();
 
             for (Edge<String, RailSwitch, Rail> edge : vertex.getEdges()) {
+                if (vertex.getPreviosVertex() != null) {
+                    if (infrastructure.isCrossing(vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey())) {
+                        System.out.printf("Illegal Path: %s->%s->%s%n", vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey());
+                    }
+                    System.out.println(vertex.getPreviosVertex().getKey() + "->" + vertex.getKey() + " -> " + edge.getTarget().getKey());
+                }
                 Vertex<String, RailSwitch, Rail> v = edge.getTarget();
                 if (v.getValue().isTrainNear()) {
                     continue;
