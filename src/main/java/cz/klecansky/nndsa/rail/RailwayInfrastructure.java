@@ -72,7 +72,7 @@ public class RailwayInfrastructure {
         }
         Dijkstra dijkstra = new Dijkstra();
         Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);
-        dijkstra.computePath(sourceVertex, this);
+        dijkstra.computePath(sourceVertex, this, trainLength);
         Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(toVia);
         return dijkstra.getShortestPathTo(targetVertex);
     }
