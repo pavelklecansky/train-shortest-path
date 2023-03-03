@@ -1,6 +1,7 @@
 package cz.klecansky.nndsa;
 
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
+import cz.klecansky.nndsa.algorithms.ShortestPathDisplay;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
@@ -223,11 +224,11 @@ public class MainController implements Initializable {
         result.ifPresent(shortestPathReturn -> {
             System.out.println(shortestPathReturn);
             try {
-                List<Vertex<String, RailSwitch, Rail>> shortestPath = railwayInfrastructure.shortestPath(shortestPathReturn.firstViaRailSwitch(), shortestPathReturn.startRail(), shortestPathReturn.secondViaRailSwitch(), shortestPathReturn.endRail(), shortestPathReturn.trainLength());
-                double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).getMinDistance();
+                List<ShortestPathDisplay> shortestPath = railwayInfrastructure.shortestPath(shortestPathReturn.firstViaRailSwitch(), shortestPathReturn.startRail(), shortestPathReturn.secondViaRailSwitch(), shortestPathReturn.endRail(), shortestPathReturn.trainLength());
+                double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).minDistance() + shortestPathReturn.trainLength();
                 shortestPathLabel.setText(Utils.shortestPathFormat(shortestPathDistance));
                 shortestPathListView.getItems().clear();
-                shortestPathListView.getItems().addAll(shortestPath.stream().map(Vertex::getKey).toList());
+                shortestPathListView.getItems().addAll(shortestPath.stream().map(ShortestPathDisplay::toString).toList());
             } catch (Exception exception) {
                 Utils.alert(exception.getMessage());
             }

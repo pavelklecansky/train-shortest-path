@@ -18,9 +18,12 @@ public class ImporterCsv {
             if (line.equals(Utils.VERTICES_EDGES_DIVIDER)) {
                 break;
             }
-            railwayInfrastructure.addSwitch(new RailSwitch(line.trim(), RailSwitchType.NONE));
+            railwayInfrastructure.addSwitch(new RailSwitch(line.trim()));
         }
         while ((line = bufferedReader.readLine()) != null) {
+            if (line.equals(Utils.EDGES_CROSSING_DIVIDER)) {
+                break;
+            }
             String[] split = line.split("\\|");
             String[] rail = split[0].split(",");
             String railName = rail[0];
@@ -37,6 +40,20 @@ public class ImporterCsv {
                 railwayInfrastructure.setTrainNearFor(railNear);
             }
             railwayInfrastructure.addRail(railName, startRailSwitchKey, endRailSwitchKey, new Rail(railName, railLength, newTrain));
+        }
+
+        while ((line = bufferedReader.readLine()) != null) {
+            if (line.equals(Utils.VERTICES_EDGES_DIVIDER)) {
+                break;
+            }
+            String[] crossingSplit = line.split(",");
+            RailSwitch firstOuter = railwayInfrastructure.getRailSwitch(crossingSplit[0]);
+            RailSwitch middle = railwayInfrastructure.getRailSwitch(crossingSplit[1]);
+            RailSwitch secondOuter = railwayInfrastructure.getRailSwitch(crossingSplit[2]);
+            firstOuter.setCrossing(true);
+            middle.setCrossing(true);
+            secondOuter.setCrossing(true);
+            railwayInfrastructure.addCrossing(new Crossing(firstOuter, middle, secondOuter));
         }
 
         return railwayInfrastructure;

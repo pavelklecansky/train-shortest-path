@@ -13,6 +13,7 @@ public final class Utils {
 
 
     public static final String VERTICES_EDGES_DIVIDER = "#rails#";
+    public static final String EDGES_CROSSING_DIVIDER = "#crossing#";
 
 
     public static String shortestPathFormat(double length) {
@@ -47,7 +48,7 @@ public final class Utils {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                return new RailSwitch(nameField.getText(), RailSwitchType.valueOf(railSwitchType.getValue()));
+                return new RailSwitch(nameField.getText());
             }
             return null;
         });
@@ -92,7 +93,7 @@ public final class Utils {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                return new Pair<>(railSwitchSelect.getValue(), new RailSwitch(railSwitchName.getText(), RailSwitchType.NONE));
+                return new Pair<>(railSwitchSelect.getValue(), new RailSwitch(railSwitchName.getText()));
             }
             return null;
         });

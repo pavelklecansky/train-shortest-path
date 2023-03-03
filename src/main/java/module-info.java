@@ -9,5 +9,6 @@ module cz.klecansky.nndsa {
     exports cz.klecansky.nndsa.graph;
     exports cz.klecansky.nndsa.utils;
     exports cz.klecansky.nndsa.rail;
+    exports cz.klecansky.nndsa.algorithms;
     opens cz.klecansky.nndsa.utils to javafx.fxml;
 }
