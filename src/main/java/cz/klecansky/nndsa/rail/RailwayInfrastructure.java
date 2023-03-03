@@ -7,9 +7,7 @@ import cz.klecansky.nndsa.graph.Graph;
 import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.utils.Triplet;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class RailwayInfrastructure {
     private final Graph<String, RailSwitch, Rail> graph;
@@ -44,7 +42,7 @@ public class RailwayInfrastructure {
         crossings.add(crossing);
     }
 
-    public boolean isCrossing(String key, String key1, String key2) {
+    public boolean isPartOfIllegalPath(String key, String key1, String key2) {
         RailSwitch firstOuter = getRailSwitch(key);
         RailSwitch middle = getRailSwitch(key1);
         RailSwitch secondOuter = getRailSwitch(key2);
@@ -73,9 +71,8 @@ public class RailwayInfrastructure {
         }
         Dijkstra dijkstra = new Dijkstra();
         Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);
-        dijkstra.computePath(sourceVertex, this, trainLength);
         Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(toVia);
-        return dijkstra.getShortestPathTo(targetVertex);
+        return dijkstra.computePath(sourceVertex, targetVertex, this, trainLength);
     }
 
     public void setTrainNearFor(String railNear) {

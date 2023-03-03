@@ -225,7 +225,7 @@ public class MainController implements Initializable {
             System.out.println(shortestPathReturn);
             try {
                 List<ShortestPathDisplay> shortestPath = railwayInfrastructure.shortestPath(shortestPathReturn.firstViaRailSwitch(), shortestPathReturn.startRail(), shortestPathReturn.secondViaRailSwitch(), shortestPathReturn.endRail(), shortestPathReturn.trainLength());
-                double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).minDistance() + shortestPathReturn.trainLength();
+                double shortestPathDistance = shortestPath.get(shortestPath.size() - 1).getMinDistance() + shortestPathReturn.trainLength();
                 shortestPathLabel.setText(Utils.shortestPathFormat(shortestPathDistance));
                 shortestPathListView.getItems().clear();
                 shortestPathListView.getItems().addAll(shortestPath.stream().map(ShortestPathDisplay::toString).toList());

@@ -2,6 +2,7 @@ package cz.klecansky.nndsa.algorithms;
 
 import cz.klecansky.nndsa.graph.Edge;
 import cz.klecansky.nndsa.graph.Vertex;
+import cz.klecansky.nndsa.rail.Crossing;
 import cz.klecansky.nndsa.rail.Rail;
 import cz.klecansky.nndsa.rail.RailSwitch;
 import cz.klecansky.nndsa.rail.RailwayInfrastructure;
@@ -10,7 +11,8 @@ import java.util.*;
 
 public class Dijkstra {
 
-    public void computePath(Vertex<String, RailSwitch, Rail> sourceVertex, RailwayInfrastructure infrastructure, double trainLength) {
+    public List<ShortestPathDisplay> computePath(Vertex<String, RailSwitch, Rail> sourceVertex, Vertex<String, RailSwitch, Rail> targetVertex, RailwayInfrastructure infrastructure, double trainLength) {
+        Map<String, Set<Edge<String, RailSwitch, Rail>>> reversePaths = new HashMap<>();
         sourceVertex.setMinDistance(0);
         PriorityQueue<Vertex<String, RailSwitch, Rail>> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(sourceVertex);
@@ -26,10 +28,11 @@ public class Dijkstra {
                 double weight = edge.getValue().getLength();
 
                 if (vertex.getPreviosVertex() != null) {
-                    if (infrastructure.isCrossing(vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey())) {
+                    if (infrastructure.isPartOfIllegalPath(vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey())) {
                         System.out.printf("Illegal Path: %s->%s->%s%n", vertex.getPreviosVertex().getKey(), vertex.getKey(), edge.getTarget().getKey());
                         Set<Edge<String, RailSwitch, Rail>> reversePath = getReversePath(vertex.getPreviosVertex(), vertex, edge.getTarget(), trainLength);
                         System.out.println(reversePath);
+                        reversePaths.put(vertex.getKey(), reversePath);
                         double reversePathSum = reversePath.stream().map(Edge::getValue).map(Rail::getLength).mapToDouble(Double::doubleValue).sum();
                         if (reversePathSum < trainLength) {
                             continue;
@@ -48,6 +51,41 @@ public class Dijkstra {
                 }
             }
         }
+        List<ShortestPathDisplay> path = new ArrayList<>();
+
+        for (Vertex<String, RailSwitch, Rail> vertex = targetVertex; vertex != null; vertex = vertex.getPreviosVertex()) {
+            path.add(new ShortestPathDisplay(vertex.getKey(), vertex.getMinDistance()));
+        }
+
+        Collections.reverse(path);
+
+        List<String> illegalCrossing = getIllegelCrossingThatTrainTaked(path, infrastructure);
+
+        for (String vertexKey : illegalCrossing) {
+            System.out.println(vertexKey);
+            if (reversePaths.containsKey(vertexKey)) {
+                List<String> reversePathList = new ArrayList<>(reversePaths.get(vertexKey).stream().map(Edge::getKey).toList());
+                path.forEach(shortestPathDisplay -> {
+                    if (shortestPathDisplay.getRailSwitchName().equals(vertexKey)) {
+                        shortestPathDisplay.setReversePath(reversePathList);
+                    }
+                });
+            }
+        }
+
+        return path;
+    }
+
+    private List<String> getIllegelCrossingThatTrainTaked(List<ShortestPathDisplay> path, RailwayInfrastructure infrastructure) {
+        List<String> crossings = new ArrayList<>();
+        int i = 0;
+        while (i < path.size() - 2) {
+            if (infrastructure.isPartOfIllegalPath(path.get(i).getRailSwitchName(), path.get(i + 1).getRailSwitchName(), path.get(i + 2).getRailSwitchName())) {
+                crossings.add(path.get(i + 1).getRailSwitchName());
+            }
+            i++;
+        }
+        return crossings;
     }
 
     private Set<Edge<String, RailSwitch, Rail>> getReversePath(Vertex<String, RailSwitch, Rail> from, Vertex<String, RailSwitch, Rail> currentVertex, Vertex<String, RailSwitch, Rail> destination, double threshold) {
@@ -94,16 +132,4 @@ public class Dijkstra {
     private List<Vertex<String, RailSwitch, Rail>> getNeighborVertices(Vertex<String, RailSwitch, Rail> currentVertex) {
         return currentVertex.getEdges().stream().map(Edge::getTarget).toList();
     }
-
-    public List<ShortestPathDisplay> getShortestPathTo(Vertex<String, RailSwitch, Rail> targetVertex) {
-        List<ShortestPathDisplay> path = new ArrayList<>();
-
-        for (Vertex<String, RailSwitch, Rail> vertex = targetVertex; vertex != null; vertex = vertex.getPreviosVertex()) {
-            path.add(new ShortestPathDisplay(vertex.getKey(), vertex.getMinDistance()));
-        }
-
-        Collections.reverse(path);
-        return path;
-    }
-
 }
