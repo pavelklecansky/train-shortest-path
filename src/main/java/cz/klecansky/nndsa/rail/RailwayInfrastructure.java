@@ -44,7 +44,7 @@ public class RailwayInfrastructure {
         crossings.add(crossing);
     }
 
-    public boolean isCrossing(String key, String key1, String key2){
+    public boolean isCrossing(String key, String key1, String key2) {
         RailSwitch firstOuter = getRailSwitch(key);
         RailSwitch middle = getRailSwitch(key1);
         RailSwitch secondOuter = getRailSwitch(key2);
@@ -79,9 +79,10 @@ public class RailwayInfrastructure {
     }
 
     public void setTrainNearFor(String railNear) {
-        RailSwitch railSwitch = graph.getVertexValue(railNear);
+        RailSwitch railSwitch = getRailSwitch(railNear);
         railSwitch.setTrainNear(true);
     }
+
 
     public List<String> getRailNeighbours(String newValue) {
         return graph.getVertexEdgeKeys(newValue);
@@ -104,7 +105,8 @@ public class RailwayInfrastructure {
         if (rail.getLength() < train.getLength()) {
             throw new IllegalArgumentException("Train is longer then rail");
         }
-        graph.getEdgeValue(train.getRail()).setTrain(train);
+        getRail(train.getRail()).setTrain(train);
+        setTrainNearFor(train.getNearRailSwitch());
     }
 
     public void deleteTrain(String trainName) {
@@ -113,6 +115,7 @@ public class RailwayInfrastructure {
             Train train = first.get();
             Rail rail = getRail(train.getRail());
             rail.removeTrain();
+            getRailSwitch(train.getNearRailSwitch()).setTrainNear(false);
         }
     }
 
@@ -133,8 +136,8 @@ public class RailwayInfrastructure {
         }
     }
 
-    public RailSwitch getRailSwitch(String railKey) {
-        return graph.getVertexValue(railKey);
+    public RailSwitch getRailSwitch(String railSwitchKey) {
+        return graph.getVertexValue(railSwitchKey);
     }
 
     public void editRailSwitch(String key, RailSwitch value) {
