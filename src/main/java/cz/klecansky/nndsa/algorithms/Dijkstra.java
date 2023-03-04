@@ -58,7 +58,7 @@ public class Dijkstra {
 
         Collections.reverse(path);
 
-        List<String> illegalCrossing = getIllegelCrossingThatTrainTaked(path, infrastructure);
+        List<String> illegalCrossing = getIllegalCrossingThatTrainTaked(path, infrastructure);
 
         for (String vertexKey : illegalCrossing) {
             System.out.println(vertexKey);
@@ -75,7 +75,7 @@ public class Dijkstra {
         return path;
     }
 
-    private List<String> getIllegelCrossingThatTrainTaked(List<ShortestPathDisplay> path, RailwayInfrastructure infrastructure) {
+    private List<String> getIllegalCrossingThatTrainTaked(List<ShortestPathDisplay> path, RailwayInfrastructure infrastructure) {
         List<String> crossings = new ArrayList<>();
         int i = 0;
         while (i < path.size() - 2) {
@@ -92,6 +92,8 @@ public class Dijkstra {
         Set<Vertex<String, RailSwitch, Rail>> visited = new HashSet<>();
         Stack<Edge<String, RailSwitch, Rail>> moveOver = new Stack<>();
 
+        Map<Vertex<String, RailSwitch, Rail>, DFSTable> dfsTableMap = new HashMap<>();
+
         Map<Vertex<String, RailSwitch, Rail>, Double> pathWeight = new HashMap<>();
 
         stack.push(currentVertex);
@@ -101,6 +103,7 @@ public class Dijkstra {
                 break;
             }
             Vertex<String, RailSwitch, Rail> current = stack.pop();
+            dfsTableMap.putIfAbsent(current, new DFSTable(currentVertex));
             pathWeight.putIfAbsent(current, 0.0);
             if (!visited.contains(current)) {
                 visited.add(current);
@@ -116,10 +119,18 @@ public class Dijkstra {
                         break;
                     }
 
+                    if (dfsTableMap.containsKey(current) && dfsTableMap.get(current).getPrevious() != null) {
+                        if (infrastructure.isPartOfIllegalPath(dfsTableMap.get(current).getPrevious().getKey(), current.getKey(), neighbor.getKey())) {
+                            System.out.printf("Illegal Path inside DFS: %s->%s->%s%n", dfsTableMap.get(current).getPrevious(), current.getKey(), neighbor.getKey());
+                            continue;
+                        }
+                    }
+
                     double edgeWeight = e.getValue().getVacancy();
 
                     if (!visited.contains(neighbor)) {
                         pathWeight.putIfAbsent(neighbor, pathWeight.get(current) + edgeWeight);
+                        dfsTableMap.putIfAbsent(neighbor, new DFSTable(neighbor, current));
                         System.out.println(e);
                         moveOver.add(e);
                         stack.push(neighbor);
@@ -131,6 +142,10 @@ public class Dijkstra {
         System.out.println("------- Test -----------");
         for (Map.Entry<Vertex<String, RailSwitch, Rail>, Double> vertexDoubleEntry : pathWeight.entrySet()) {
             System.out.println(vertexDoubleEntry);
+        }
+        System.out.println("------- Test -----------");
+        for (Map.Entry<Vertex<String, RailSwitch, Rail>, DFSTable> vertexDFSTableEntry : dfsTableMap.entrySet()) {
+            System.out.println(vertexDFSTableEntry);
         }
         System.out.println("------------------------");
         return new Pair<>(moveOver, isPathOverThreshold(threshold, pathWeight));
