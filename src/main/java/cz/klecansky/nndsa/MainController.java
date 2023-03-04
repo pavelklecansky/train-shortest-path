@@ -2,7 +2,6 @@ package cz.klecansky.nndsa;
 
 import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
 import cz.klecansky.nndsa.algorithms.ShortestPathDisplay;
-import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.io.ExporterCsv;
 import cz.klecansky.nndsa.io.ImporterCsv;
 import cz.klecansky.nndsa.rail.Rail;
@@ -90,7 +89,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void importRailwayInfrastructure(ActionEvent event) throws IOException {
+    void importRailwayInfrastructure() throws IOException {
         File fileFromFileChooser = getFileFromFileChooser();
         railwayInfrastructure = importerCsv.importRailwayInfrastructure(fileFromFileChooser);
         reloadUi();
@@ -231,6 +230,7 @@ public class MainController implements Initializable {
                 shortestPathListView.getItems().addAll(shortestPath.stream().map(ShortestPathDisplay::toString).toList());
             } catch (Exception exception) {
                 Utils.alert(exception.getMessage());
+                shortestPathListView.getItems().clear();
             }
 
         });
