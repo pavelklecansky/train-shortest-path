@@ -38,6 +38,10 @@ public class RailwayInfrastructure {
         return getRails().stream().filter(Rail::hasTrain).map(Rail::getTrain).sorted().distinct().toList();
     }
 
+    public List<Crossing> getCrossings() {
+        return crossings;
+    }
+
     public void addCrossing(Crossing crossing) {
         crossings.add(crossing);
     }
