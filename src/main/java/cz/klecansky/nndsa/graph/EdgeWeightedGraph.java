@@ -42,26 +42,6 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
-    public void deleteEdge(Key first, Key second) {
-        if (first == null || second == null) {
-            throw new IllegalArgumentException("Edge is null.");
-        }
-        deleteEdgeFromSingleVertex(first, second);
-        deleteEdgeFromSingleVertex(second, first);
-    }
-
-    @Override
-    public Vertex<Key, VValue, EValue> vertexByKey(Key vertexKey) {
-        if (vertexKey == null) {
-            throw new IllegalArgumentException("Vertex key is null.");
-        }
-        if (!vertices.containsKey(vertexKey)) {
-            throw new IllegalArgumentException("Vertex with this key is not in graph.");
-        }
-        return vertices.get(vertexKey);
-    }
-
-    @Override
     public List<VValue> getVerticesValue() {
         return vertices.values().stream().map(Vertex::getValue).toList();
     }
@@ -69,11 +49,6 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     @Override
     public List<EValue> getEdgeValue() {
         return getEdges().stream().map(Edge::getValue).toList();
-    }
-
-    @Override
-    public void clearDijkstra() {
-        vertices.forEach((key, vertex) -> vertex.clearDijkstra());
     }
 
     @Override
@@ -90,6 +65,11 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     @Override
     public List<Key> getVertexEdgeKeys(Key newValue) {
         return vertices.get(newValue).getEdges().stream().map(Edge::getKey).toList();
+    }
+
+    @Override
+    public List<EValue> getVertexEdges(Key newValue) {
+        return vertices.get(newValue).getEdges().stream().map(Edge::getValue).toList();
     }
 
     @Override
@@ -137,6 +117,12 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
         });
     }
 
+    @Override
+    public VValue getVertexEdgeTarget(Key railSwitch, Key rail) {
+        Optional<Edge<Key, VValue, EValue>> first = vertices.get(railSwitch).getEdges().stream().filter(edge -> edge.getKey().equals(rail)).findFirst();
+        return first.map(edge -> edge.getTarget().getValue()).orElse(null);
+    }
+
     public List<Edge<Key, VValue, EValue>> getEdges() {
         return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
     }
@@ -155,12 +141,5 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
 
     private boolean isVertexNotInGraph(Key vertexKey) {
         return !vertices.containsKey(vertexKey);
-    }
-
-    private void deleteEdgeFromSingleVertex(Key one, Key other) {
-        if (isVertexNotInGraph(one) || isVertexNotInGraph(other)) {
-            throw new IllegalArgumentException("Edge vertices are not in graph.");
-        }
-        vertices.get(one).deleteEdge(other);
     }
 }

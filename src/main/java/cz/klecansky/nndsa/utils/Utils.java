@@ -204,7 +204,7 @@ public final class Utils {
         nearRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             rail.getItems().clear();
 
-            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            List<String> neighbours = infrastructure.getRailNeighbourKeys(newValue);
             rail.getItems().addAll(neighbours);
             rail.setDisable(false);
         });
@@ -257,7 +257,7 @@ public final class Utils {
         nearRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             rail.getItems().clear();
 
-            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            List<String> neighbours = infrastructure.getRailNeighbourKeys(newValue);
             rail.getItems().addAll(neighbours);
             rail.setDisable(false);
         });
@@ -406,7 +406,7 @@ public final class Utils {
         firstViaRailSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             startRail.getItems().clear();
 
-            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            List<String> neighbours = infrastructure.getRailNeighbourKeys(newValue);
             startRail.getItems().addAll(neighbours);
             startRail.setDisable(false);
         });
@@ -420,7 +420,7 @@ public final class Utils {
         secondViaRaiSwitch.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             endRail.getItems().clear();
 
-            List<String> neighbours = infrastructure.getRailNeighbours(newValue);
+            List<String> neighbours = infrastructure.getRailNeighbourKeys(newValue);
             endRail.getItems().addAll(neighbours);
             endRail.setDisable(false);
         });

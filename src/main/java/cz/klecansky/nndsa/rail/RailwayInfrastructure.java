@@ -4,7 +4,6 @@ import cz.klecansky.nndsa.algorithms.Dijkstra;
 import cz.klecansky.nndsa.algorithms.ShortestPathDisplay;
 import cz.klecansky.nndsa.graph.EdgeWeightedGraph;
 import cz.klecansky.nndsa.graph.Graph;
-import cz.klecansky.nndsa.graph.Vertex;
 import cz.klecansky.nndsa.utils.Triplet;
 
 import java.util.*;
@@ -64,7 +63,7 @@ public class RailwayInfrastructure {
     }
 
     public List<ShortestPathDisplay> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
-        graph.clearDijkstra();
+        clearDijkstra();
         Rail startRail = graph.getEdgeValue(railSwitchStart);
         if (startRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train cannot have bigger length than starting rail.");
@@ -74,8 +73,9 @@ public class RailwayInfrastructure {
             throw new IllegalArgumentException("Train has not enough space to fit in ending rail.");
         }
         Dijkstra dijkstra = new Dijkstra();
-        Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);
-        Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(toVia);
+
+        RailSwitch sourceVertex = getRailSwitch(fromVia);
+        RailSwitch targetVertex = getRailSwitch(toVia);
         List<ShortestPathDisplay> shortestPathDisplays = dijkstra.computePath(sourceVertex, startRail, targetVertex, endRail, this, trainLength);
 
         ShortestPathDisplay shortestPathDisplay = shortestPathDisplays.get(shortestPathDisplays.size() - 1);
@@ -92,8 +92,12 @@ public class RailwayInfrastructure {
     }
 
 
-    public List<String> getRailNeighbours(String newValue) {
+    public List<String> getRailNeighbourKeys(String newValue) {
         return graph.getVertexEdgeKeys(newValue);
+    }
+
+    public List<Rail> getRailNeighbours(String newValue) {
+        return graph.getVertexEdges(newValue);
     }
 
     public List<String> getSwitchKeys() {
@@ -167,5 +171,13 @@ public class RailwayInfrastructure {
         graph.setEdge(key, value.getName(), value);
         Rail rail = getRail(value.getName());
         rail.getTrain().setRail(rail.getName());
+    }
+
+    public RailSwitch getRailTarget(String railSwitch, String rail) {
+        return graph.getVertexEdgeTarget(railSwitch, rail);
+    }
+
+    public void clearDijkstra() {
+        getSwitches().forEach(RailSwitch::clearDijkstra);
     }
 }
