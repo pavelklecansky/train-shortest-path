@@ -17,7 +17,7 @@ public final class Utils {
 
 
     public static String shortestPathFormat(double length) {
-        return String.format("Shortest path: %1.2f", length);
+        return String.format("Shortest path: %1.1f", length);
     }
 
     public static Dialog<RailSwitch> railSwitchDialog() {

@@ -64,7 +64,7 @@ public final class Train implements Comparable<Train> {
 
     @Override
     public String toString() {
-        return String.format("%s: length: %1.2f | rail: %s | near: %s", name, length, rail, nearRailSwitch);
+        return String.format("%s: length: %1.1f | rail: %s | near: %s", name, length, rail, nearRailSwitch);
     }
 
     @Override

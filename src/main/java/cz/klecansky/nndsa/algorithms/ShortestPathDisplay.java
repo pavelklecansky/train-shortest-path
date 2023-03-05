@@ -9,15 +9,19 @@ public final class ShortestPathDisplay {
     private double minDistance;
     private List<String> reversePath = new ArrayList<>();
 
-    public ShortestPathDisplay(String railSwitchName, double minDistance, List<String> reversePath) {
+    private double trainLength;
+
+    public ShortestPathDisplay(String railSwitchName, double minDistance, List<String> reversePath, double trainLength) {
         this.railSwitchName = railSwitchName;
         this.minDistance = minDistance;
         this.reversePath = reversePath;
+        this.trainLength = trainLength;
     }
 
-    public ShortestPathDisplay(String railSwitchName, double minDistance) {
+    public ShortestPathDisplay(String railSwitchName, double minDistance, double trainLength) {
         this.railSwitchName = railSwitchName;
         this.minDistance = minDistance;
+        this.trainLength = trainLength;
     }
 
     public String getRailSwitchName() {
@@ -46,7 +50,13 @@ public final class ShortestPathDisplay {
 
     @Override
     public String toString() {
-        return railSwitchName + ": " + minDistance + " | " + String.join(" -> ", reversePath);
+        String reversePathFormat = "";
+        double minDistanceCalc = minDistance;
+        if (!reversePath.isEmpty()) {
+            reversePathFormat = String.format("%s (%1.1f)", String.join(" -> ", reversePath), trainLength);
+            minDistanceCalc = minDistance - trainLength;
+        }
+        return String.format("%s: %1.1f | %s", railSwitchName, minDistanceCalc, reversePathFormat);
     }
 
     @Override

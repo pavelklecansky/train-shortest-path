@@ -38,7 +38,7 @@ public class Dijkstra {
                         if (!reversePath.getValue()) {
                             continue;
                         }
-                        weight += trainLength;
+                        vertex.setMinDistance(vertex.getMinDistance() + trainLength);
                     }
                     System.out.println(vertex.getPreviosRailSwitch().getName() + "->" + vertex.getName() + " -> " + target.getName());
                 }
@@ -55,7 +55,7 @@ public class Dijkstra {
         List<ShortestPathDisplay> path = new ArrayList<>();
 
         for (RailSwitch vertex = targetVertex; vertex != null; vertex = vertex.getPreviosRailSwitch()) {
-            path.add(new ShortestPathDisplay(vertex.getName(), vertex.getMinDistance()));
+            path.add(new ShortestPathDisplay(vertex.getName(), vertex.getMinDistance(), trainLength));
         }
 
         Collections.reverse(path);
