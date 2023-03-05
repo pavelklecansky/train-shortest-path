@@ -30,7 +30,7 @@ public class RailwayInfrastructure {
     }
 
     public List<Rail> getRails() {
-        return graph.getEdgeValue();
+        return graph.getEdgeValues();
     }
 
     public List<Train> getTrains() {
@@ -64,11 +64,11 @@ public class RailwayInfrastructure {
 
     public List<ShortestPathDisplay> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
         clearDijkstra();
-        Rail startRail = graph.getEdgeValue(railSwitchStart);
+        Rail startRail = graph.getEdgeValues(railSwitchStart);
         if (startRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train cannot have bigger length than starting rail.");
         }
-        Rail endRail = graph.getEdgeValue(railSwitchEnd);
+        Rail endRail = graph.getEdgeValues(railSwitchEnd);
         if (endRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train has not enough space to fit in ending rail.");
         }
@@ -109,7 +109,7 @@ public class RailwayInfrastructure {
     }
 
     public Rail getRail(String rail) {
-        return graph.getEdgeValue(rail);
+        return graph.getEdgeValues(rail);
     }
 
     public void addTrain(Train train) {

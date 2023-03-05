@@ -50,9 +50,6 @@ public class ImporterCsv {
             RailSwitch firstOuter = railwayInfrastructure.getRailSwitch(crossingSplit[0]);
             RailSwitch middle = railwayInfrastructure.getRailSwitch(crossingSplit[1]);
             RailSwitch secondOuter = railwayInfrastructure.getRailSwitch(crossingSplit[2]);
-            firstOuter.setCrossing(true);
-            middle.setCrossing(true);
-            secondOuter.setCrossing(true);
             railwayInfrastructure.addCrossing(new Crossing(firstOuter, middle, secondOuter));
         }
 

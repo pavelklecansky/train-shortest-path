@@ -42,12 +42,42 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
+    public void deleteEdge(Key edgeKey) {
+        List<Vertex<Key, VValue, EValue>> verticesWithEdgeKey = vertices.values().stream().filter(vertex -> vertex.hasEdge(edgeKey)).toList();
+        verticesWithEdgeKey.forEach(vertex -> vertex.deleteEdge(edgeKey));
+    }
+
+    @Override
+    public void deleteVertex(Key vertexKey) {
+        getVertexEdgeKeys(vertexKey).forEach(this::deleteEdge);
+        vertices.remove(vertexKey);
+    }
+
+    @Override
+    public void renameVertex(Key oldName, Key newName) {
+        Vertex<Key, VValue, EValue> vertex = vertices.get(oldName);
+        vertex.setKey(newName);
+        vertices.remove(oldName);
+        vertices.put(newName, vertex);
+    }
+
+    @Override
+    public void setEdge(Key oldKey, Key newKey, EValue eValue) {
+        List<Vertex<Key, VValue, EValue>> edgeVertices = getEdgeVertices(oldKey);
+        edgeVertices.forEach(vertex -> {
+            Edge<Key, VValue, EValue> first = vertex.getEdges().stream().filter(edge -> edge.getKey().equals(oldKey)).findFirst().get();
+            first.setKey(newKey);
+            first.setValue(eValue);
+        });
+    }
+
+    @Override
     public List<VValue> getVerticesValue() {
         return vertices.values().stream().map(Vertex::getValue).toList();
     }
 
     @Override
-    public List<EValue> getEdgeValue() {
+    public List<EValue> getEdgeValues() {
         return getEdges().stream().map(Edge::getValue).toList();
     }
 
@@ -78,7 +108,7 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
-    public EValue getEdgeValue(Key railSwitchStart) {
+    public EValue getEdgeValues(Key railSwitchStart) {
         return edgeByKey(railSwitchStart).getValue();
     }
 
@@ -88,42 +118,12 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
-    public void deleteEdge(Key edgeKey) {
-        List<Vertex<Key, VValue, EValue>> verticesWithEdgeKey = vertices.values().stream().filter(vertex -> vertex.hasEdge(edgeKey)).toList();
-        verticesWithEdgeKey.forEach(vertex -> vertex.deleteEdgeExact(edgeKey));
-    }
-
-    @Override
-    public void deleteVertex(Key vertexKey) {
-        getVertexEdgeKeys(vertexKey).forEach(this::deleteEdge);
-        vertices.remove(vertexKey);
-    }
-
-    @Override
-    public void renameVertex(Key oldName, Key newName) {
-        Vertex<Key, VValue, EValue> vertex = vertices.get(oldName);
-        vertex.setKey(newName);
-        vertices.remove(oldName);
-        vertices.put(newName, vertex);
-    }
-
-    @Override
-    public void setEdge(Key oldKey, Key newKey, EValue eValue) {
-        List<Vertex<Key, VValue, EValue>> edgeVertices = getEdgeVertices(oldKey);
-        edgeVertices.forEach(vertex -> {
-            Edge<Key, VValue, EValue> first = vertex.getEdges().stream().filter(edge -> edge.getKey().equals(oldKey)).findFirst().get();
-            first.setKey(newKey);
-            first.setValue(eValue);
-        });
-    }
-
-    @Override
     public VValue getVertexEdgeTarget(Key railSwitch, Key rail) {
         Optional<Edge<Key, VValue, EValue>> first = vertices.get(railSwitch).getEdges().stream().filter(edge -> edge.getKey().equals(rail)).findFirst();
         return first.map(edge -> edge.getTarget().getValue()).orElse(null);
     }
 
-    public List<Edge<Key, VValue, EValue>> getEdges() {
+    private List<Edge<Key, VValue, EValue>> getEdges() {
         return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
     }
 
@@ -137,9 +137,5 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
 
     private List<Vertex<Key, VValue, EValue>> getVertices() {
         return vertices.values().stream().toList();
-    }
-
-    private boolean isVertexNotInGraph(Key vertexKey) {
-        return !vertices.containsKey(vertexKey);
     }
 }

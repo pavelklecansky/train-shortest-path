@@ -19,11 +19,11 @@ public class GraphUi {
         }
 
         for (Triplet<String, String, Rail> triplet : railwayInfrastructure.getDistinctRailsDetailInfo()) {
-            distances.insertEdge(triplet.getFirst(), triplet.getSecond(), new Weight(triplet.getThird().getLength()));
+            distances.insertEdge(triplet.first(), triplet.second(), new Weight(triplet.third().getLength()));
         }
 
         /* Only Java 15 allows for multi-line strings */
-        String customProps = "edge.label = true" + "\n" + "edge.arrow = false";
+        String customProps = getCustomProps();
 
         SmartGraphProperties properties = new SmartGraphProperties(customProps);
         SmartGraphPanel<String, Weight> railwayPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
@@ -39,7 +39,7 @@ public class GraphUi {
         Graph<String, Weight> distances = new GraphEdgeList<>();
 
         /* Only Java 15 allows for multi-line strings */
-        String customProps = "edge.label = true" + "\n" + "edge.arrow = false";
+        String customProps = getCustomProps();
 
         SmartGraphProperties properties = new SmartGraphProperties(customProps);
         SmartGraphPanel<String, Weight> railwayPanel = new SmartGraphPanel<>(distances, properties, new SmartCircularSortedPlacementStrategy());
@@ -49,5 +49,9 @@ public class GraphUi {
         railwayPanel.prefHeight(1000);
 
         return railwayPanel;
+    }
+
+    private static String getCustomProps() {
+        return "edge.label = true" + "\n" + "edge.arrow = false";
     }
 }

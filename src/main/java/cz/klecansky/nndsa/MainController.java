@@ -15,7 +15,6 @@ import cz.klecansky.nndsa.utils.ShortestPathDialogReturn;
 import cz.klecansky.nndsa.utils.Triplet;
 import cz.klecansky.nndsa.utils.Utils;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -253,7 +252,7 @@ public class MainController implements Initializable {
     }
 
     private String railsDetailInfoToFormatedString(Triplet<String, String, Rail> detailedInfo) {
-        return String.format("%s: %s-%s %s", detailedInfo.getThird().getName(), detailedInfo.getFirst(), detailedInfo.getSecond(), detailedInfo.getThird().getLength());
+        return String.format("%s: %s-%s %s", detailedInfo.third().getName(), detailedInfo.first(), detailedInfo.second(), detailedInfo.third().getLength());
     }
 
     private void enableButtons() {

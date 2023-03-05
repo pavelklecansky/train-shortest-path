@@ -13,7 +13,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     List<VValue> getVerticesValue();
 
-    List<EValue> getEdgeValue();
+    List<EValue> getEdgeValues();
 
     VValue getVertexValue(Key vertexKey);
 
@@ -23,7 +23,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     List<Triplet<Key, Key, EValue>> getDistinctDetailEdgeValues();
 
-    EValue getEdgeValue(Key edgeKey);
+    EValue getEdgeValues(Key edgeKey);
 
     List<Triplet<Key, Key,EValue>> getDetailEdgeValues();
 
@@ -127,14 +127,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
             edges.add(edge);
         }
 
-        public void deleteEdge(Key other) {
-            if (other == null) {
-                throw new IllegalArgumentException("Other vertex key is null.");
-            }
-            edges.removeIf(edge -> edge.getTarget().getKey().equals(other));
-        }
-
-        public void deleteEdgeExact(Key edgeKey) {
+        public void deleteEdge(Key edgeKey) {
             edges.removeIf(edge -> edge.getKey().equals(edgeKey));
         }
 

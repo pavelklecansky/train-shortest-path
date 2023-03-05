@@ -2,7 +2,6 @@ package cz.klecansky.nndsa.rail;
 
 public class RailSwitch implements Comparable<RailSwitch> {
     private String name;
-    private boolean crossing;
     private boolean trainNear;
     private RailSwitch previosRailSwitch;
     private double minDistance = Double.MAX_VALUE;
@@ -30,14 +29,6 @@ public class RailSwitch implements Comparable<RailSwitch> {
 
     public void setTrainNear(boolean trainNear) {
         this.trainNear = trainNear;
-    }
-
-    public boolean isCrossing() {
-        return crossing;
-    }
-
-    public void setCrossing(boolean crossing) {
-        this.crossing = crossing;
     }
 
     public RailSwitch getPreviosRailSwitch() {
