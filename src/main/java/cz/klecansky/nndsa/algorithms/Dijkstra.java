@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Dijkstra {
 
-    public List<ShortestPathDisplay> computePath(Vertex<String, RailSwitch, Rail> sourceVertex, Vertex<String, RailSwitch, Rail> targetVertex, RailwayInfrastructure infrastructure, double trainLength) {
+    public List<ShortestPathDisplay> computePath(Vertex<String, RailSwitch, Rail> sourceVertex, Rail startRail, Vertex<String, RailSwitch, Rail> targetVertex, Rail endRail, RailwayInfrastructure infrastructure, double trainLength) {
         Map<String, Set<Edge<String, RailSwitch, Rail>>> reversePaths = new HashMap<>();
         sourceVertex.setMinDistance(0);
         PriorityQueue<Vertex<String, RailSwitch, Rail>> priorityQueue = new PriorityQueue<>();
@@ -21,8 +21,12 @@ public class Dijkstra {
             Vertex<String, RailSwitch, Rail> vertex = priorityQueue.poll();
 
             for (Edge<String, RailSwitch, Rail> edge : vertex.getEdges()) {
-                Vertex<String, RailSwitch, Rail> v = edge.getTarget();
-                if (v.getValue().isTrainNear()) {
+                Vertex<String, RailSwitch, Rail> target = edge.getTarget();
+                if (target.getValue().isTrainNear()) {
+                    continue;
+                }
+                if (target.equals(targetVertex) && edge.getValue().equals(endRail)) {
+                    System.out.printf("Bad path: %s via %s\n", target.getKey(), edge.getKey());
                     continue;
                 }
                 double weight = edge.getValue().getLength();
@@ -42,11 +46,11 @@ public class Dijkstra {
                 }
 
                 double minDistance = vertex.getMinDistance() + weight;
-                if (minDistance < v.getMinDistance()) {
+                if (minDistance < target.getMinDistance()) {
                     priorityQueue.remove(vertex);
-                    v.setPreviosVertex(vertex);
-                    v.setMinDistance(minDistance);
-                    priorityQueue.add(v);
+                    target.setPreviosVertex(vertex);
+                    target.setMinDistance(minDistance);
+                    priorityQueue.add(target);
                 }
             }
         }
@@ -107,8 +111,8 @@ public class Dijkstra {
             pathWeight.putIfAbsent(current, 0.0);
             if (!visited.contains(current)) {
                 visited.add(current);
-                for (Edge<String, RailSwitch, Rail> e : current.getEdges()) {
-                    Vertex<String, RailSwitch, Rail> neighbor = e.getTarget();
+                for (Edge<String, RailSwitch, Rail> edge : current.getEdges()) {
+                    Vertex<String, RailSwitch, Rail> neighbor = edge.getTarget();
                     if (isPartOfOldCrossing(neighbor, from, destination)) {
                         continue;
                     }
@@ -126,13 +130,13 @@ public class Dijkstra {
                         }
                     }
 
-                    double edgeWeight = e.getValue().getVacancy();
+                    double edgeWeight = edge.getValue().getVacancy();
 
                     if (!visited.contains(neighbor)) {
                         pathWeight.putIfAbsent(neighbor, pathWeight.get(current) + edgeWeight);
                         dfsTableMap.putIfAbsent(neighbor, new DFSTable(neighbor, current));
-                        System.out.println(e);
-                        moveOver.add(e);
+                        System.out.println(edge);
+                        moveOver.add(edge);
                         stack.push(neighbor);
                     }
                 }

@@ -76,7 +76,7 @@ public class RailwayInfrastructure {
         Dijkstra dijkstra = new Dijkstra();
         Vertex<String, RailSwitch, Rail> sourceVertex = graph.vertexByKey(fromVia);
         Vertex<String, RailSwitch, Rail> targetVertex = graph.vertexByKey(toVia);
-        List<ShortestPathDisplay> shortestPathDisplays = dijkstra.computePath(sourceVertex, targetVertex, this, trainLength);
+        List<ShortestPathDisplay> shortestPathDisplays = dijkstra.computePath(sourceVertex, startRail, targetVertex, endRail, this, trainLength);
 
         ShortestPathDisplay shortestPathDisplay = shortestPathDisplays.get(shortestPathDisplays.size() - 1);
         if (shortestPathDisplay.getMinDistance() == Double.MAX_VALUE) {
