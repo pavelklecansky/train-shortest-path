@@ -37,6 +37,8 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     VValue getVertexEdgeTarget(Key railSwitch, Key rail);
 
+    EValue getEdge(Key start, Key target);
+
     class Edge<Key extends Comparable<Key>, VValue, EValue> implements Comparable<Edge<Key, VValue, EValue>> {
         private Key key;
         private EValue value;

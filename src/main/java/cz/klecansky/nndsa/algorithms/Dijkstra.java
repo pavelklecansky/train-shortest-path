@@ -10,7 +10,7 @@ import java.util.*;
 public class Dijkstra {
 
     public List<ShortestPathDisplay> computePath(RailSwitch sourceVertex, Rail startRail, RailSwitch targetVertex, Rail endRail, RailwayInfrastructure infrastructure, double trainLength) {
-        Map<String, Set<Rail>> reversePaths = new HashMap<>();
+        Map<String, List<String>> reversePaths = new HashMap<>();
         sourceVertex.setMinDistance(0);
         PriorityQueue<RailSwitch> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(sourceVertex);
@@ -32,9 +32,9 @@ public class Dijkstra {
                 if (vertex.getPreviosRailSwitch() != null) {
                     if (infrastructure.isPartOfIllegalPath(vertex.getPreviosRailSwitch().getName(), vertex.getName(), target.getName())) {
                         System.out.printf("Illegal Path: %s->%s->%s%n", vertex.getPreviosRailSwitch().getName(), vertex.getName(), target.getName());
-                        Pair<Stack<Rail>, Boolean> reversePath = getReversePath(vertex.getPreviosRailSwitch(), vertex, target, trainLength, infrastructure);
+                        Pair<List<String>, Boolean> reversePath = getReversePath(vertex.getPreviosRailSwitch(), vertex, target, trainLength, infrastructure);
                         System.out.println(reversePath.getKey());
-                        reversePaths.put(vertex.getName(), new HashSet<>(reversePath.getKey()));
+                        reversePaths.put(vertex.getName(), new ArrayList<>(reversePath.getKey()));
                         if (!reversePath.getValue()) {
                             continue;
                         }
@@ -65,7 +65,7 @@ public class Dijkstra {
         for (String vertexKey : illegalCrossing) {
             System.out.println(vertexKey);
             if (reversePaths.containsKey(vertexKey)) {
-                List<String> reversePathList = new ArrayList<>(reversePaths.get(vertexKey).stream().map(Rail::getName).toList());
+                List<String> reversePathList = reversePaths.get(vertexKey);
                 path.forEach(shortestPathDisplay -> {
                     if (shortestPathDisplay.getRailSwitchName().equals(vertexKey)) {
                         shortestPathDisplay.setReversePath(reversePathList);
@@ -89,24 +89,21 @@ public class Dijkstra {
         return crossings;
     }
 
-    private Pair<Stack<Rail>, Boolean> getReversePath(RailSwitch from, RailSwitch currentVertex, RailSwitch destination, double threshold, RailwayInfrastructure infrastructure) {
+    private Pair<List<String>, Boolean> getReversePath(RailSwitch from, RailSwitch currentVertex, RailSwitch destination, double threshold, RailwayInfrastructure infrastructure) {
         Stack<RailSwitch> stack = new Stack<>();
         Set<RailSwitch> visited = new HashSet<>();
         Stack<Rail> moveOver = new Stack<>();
 
         Map<RailSwitch, DFSTable> dfsTableMap = new HashMap<>();
 
-        Map<RailSwitch, Double> pathWeight = new HashMap<>();
-
         stack.push(currentVertex);
 
         while (!stack.isEmpty()) {
-            if (isPathOverThreshold(threshold, pathWeight)) {
+            if (isPathOverThreshold(threshold, dfsTableMap)) {
                 break;
             }
             RailSwitch current = stack.pop();
             dfsTableMap.putIfAbsent(current, new DFSTable(currentVertex));
-            pathWeight.putIfAbsent(current, 0.0);
             if (!visited.contains(current)) {
                 visited.add(current);
                 for (Rail edge : infrastructure.getRailNeighbours(current.getName())) {
@@ -117,7 +114,7 @@ public class Dijkstra {
                     if (current.isTrainNear()) {
                         continue;
                     }
-                    if (isPathOverThreshold(threshold, pathWeight)) {
+                    if (isPathOverThreshold(threshold, dfsTableMap)) {
                         break;
                     }
 
@@ -131,8 +128,10 @@ public class Dijkstra {
                     double edgeWeight = edge.getVacancy();
 
                     if (!visited.contains(neighbor)) {
-                        pathWeight.putIfAbsent(neighbor, pathWeight.get(current) + edgeWeight);
-                        dfsTableMap.putIfAbsent(neighbor, new DFSTable(neighbor, current));
+                        dfsTableMap.putIfAbsent(neighbor, new DFSTable(neighbor, current, dfsTableMap.get(current).getPosition() + 1, dfsTableMap.get(current).getWeight() + edgeWeight));
+                        if (dfsTableMap.containsKey(current)) {
+                            dfsTableMap.get(current).addRail(edge);
+                        }
                         System.out.println(edge);
                         moveOver.add(edge);
                         stack.push(neighbor);
@@ -141,23 +140,47 @@ public class Dijkstra {
             }
         }
 
-        System.out.println("------- Test -----------");
-        for (Map.Entry<RailSwitch, Double> vertexDoubleEntry : pathWeight.entrySet()) {
-            System.out.println(vertexDoubleEntry);
-        }
-        System.out.println("------- Test -----------");
+        System.out.println("------- DFS Table -----------");
         for (Map.Entry<RailSwitch, DFSTable> vertexDFSTableEntry : dfsTableMap.entrySet()) {
             System.out.println(vertexDFSTableEntry);
         }
         System.out.println("------------------------");
-        return new Pair<>(moveOver, isPathOverThreshold(threshold, pathWeight));
+        List<String> strings = trainReversePath(dfsTableMap);
+        System.out.println(String.join(", ", strings));
+        List<String> railReversePath = trailReversePathRails(trainReversePath(dfsTableMap), infrastructure);
+        System.out.println(String.join(", ", railReversePath));
+        System.out.println("------------------------");
+
+        return new Pair<>(railReversePath, isPathOverThreshold(threshold, dfsTableMap));
     }
 
-    private boolean isPathOverThreshold(double threshold, Map<RailSwitch, Double> vertexCalculator) {
-        return vertexCalculator.values().stream().anyMatch(aDouble -> aDouble >= threshold);
+    private List<String> trailReversePathRails(List<String> trainReversePath, RailwayInfrastructure infrastructure) {
+        List<String> path = new ArrayList<>();
+        int i = 0;
+        while (i < trainReversePath.size() - 1) {
+            Rail rail = infrastructure.getRail(trainReversePath.get(i), trainReversePath.get(i + 1));
+            path.add(rail.getName());
+            i++;
+        }
+
+        return path;
+    }
+
+    private boolean isPathOverThreshold(double threshold, Map<RailSwitch, DFSTable> vertexCalculator) {
+        return vertexCalculator.values().stream().anyMatch(table -> table.getWeight() >= threshold);
     }
 
     private boolean isPartOfOldCrossing(RailSwitch neighbor, RailSwitch from, RailSwitch destination) {
         return neighbor.getName().equals(from.getName()) || neighbor.getName().equals(destination.getName());
+    }
+
+    private List<String> trainReversePath(Map<RailSwitch, DFSTable> dfsTableMap) {
+        List<String> path = new ArrayList<>();
+        DFSTable last = dfsTableMap.values().stream().max(Comparator.comparing(DFSTable::getWeight)).orElseThrow(NoSuchElementException::new);
+        for (DFSTable current = last; current != null; current = dfsTableMap.get(dfsTableMap.get(current.getRailSwitch()).getPrevious())) {
+            path.add(current.getRailSwitch().getName());
+        }
+        Collections.reverse(path);
+        return path;
     }
 }

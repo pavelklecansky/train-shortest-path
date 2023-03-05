@@ -123,6 +123,11 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
         return first.map(edge -> edge.getTarget().getValue()).orElse(null);
     }
 
+    @Override
+    public EValue getEdge(Key start, Key target) {
+        return getEdges().stream().filter(edge -> edge.getStart().getKey().equals(start) && edge.getTarget().getKey().equals(target)).findFirst().map(Edge::getValue).orElse(null);
+    }
+
     private List<Edge<Key, VValue, EValue>> getEdges() {
         return vertices.values().stream().map(Vertex::getEdges).flatMap(List::stream).toList();
     }

@@ -180,4 +180,8 @@ public class RailwayInfrastructure {
     public void clearDijkstra() {
         getSwitches().forEach(RailSwitch::clearDijkstra);
     }
+
+    public Rail getRail(String start, String target) {
+        return graph.getEdge(start,target);
+    }
 }
