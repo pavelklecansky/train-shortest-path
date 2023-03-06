@@ -77,7 +77,7 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
-    public List<EValue> getEdgeValues() {
+    public List<EValue> getEdgeValue() {
         return getEdges().stream().map(Edge::getValue).toList();
     }
 
@@ -108,7 +108,7 @@ public class EdgeWeightedGraph<Key extends Comparable<Key>, VValue, EValue> impl
     }
 
     @Override
-    public EValue getEdgeValues(Key railSwitchStart) {
+    public EValue getEdgeValue(Key railSwitchStart) {
         return edgeByKey(railSwitchStart).getValue();
     }
 

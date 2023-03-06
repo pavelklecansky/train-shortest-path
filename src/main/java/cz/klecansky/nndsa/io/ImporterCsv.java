@@ -15,13 +15,13 @@ public class ImporterCsv {
         RailwayInfrastructure railwayInfrastructure = new RailwayInfrastructure();
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            if (line.equals(Utils.VERTICES_EDGES_DIVIDER)) {
+            if (line.equals(Utils.RAIL_SWITCHES_RAILS_DIVIDER)) {
                 break;
             }
             railwayInfrastructure.addSwitch(new RailSwitch(line.trim()));
         }
         while ((line = bufferedReader.readLine()) != null) {
-            if (line.equals(Utils.EDGES_CROSSING_DIVIDER)) {
+            if (line.equals(Utils.RAILS_CROSSING_DIVIDER)) {
                 break;
             }
             String[] split = line.split("\\|");
@@ -43,7 +43,7 @@ public class ImporterCsv {
         }
 
         while ((line = bufferedReader.readLine()) != null) {
-            if (line.equals(Utils.VERTICES_EDGES_DIVIDER)) {
+            if (line.equals(Utils.RAIL_SWITCHES_RAILS_DIVIDER)) {
                 break;
             }
             String[] crossingSplit = line.split(",");

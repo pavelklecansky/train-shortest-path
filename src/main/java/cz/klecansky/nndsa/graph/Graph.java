@@ -13,7 +13,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     List<VValue> getVerticesValue();
 
-    List<EValue> getEdgeValues();
+    List<EValue> getEdgeValue();
 
     VValue getVertexValue(Key vertexKey);
 
@@ -23,7 +23,7 @@ public interface Graph<Key extends Comparable<Key>, VValue, EValue> {
 
     List<Triplet<Key, Key, EValue>> getDistinctDetailEdgeValues();
 
-    EValue getEdgeValues(Key edgeKey);
+    EValue getEdgeValue(Key edgeKey);
 
     List<Triplet<Key, Key,EValue>> getDetailEdgeValues();
 

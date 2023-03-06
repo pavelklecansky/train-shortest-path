@@ -23,7 +23,7 @@ public class ExporterCsv {
         for (String railSwitch : switches) {
             stringBuilder.append(railSwitch).append("\n");
         }
-        stringBuilder.append(Utils.VERTICES_EDGES_DIVIDER).append("\n");
+        stringBuilder.append(Utils.RAIL_SWITCHES_RAILS_DIVIDER).append("\n");
         for (Triplet<String, String, Rail> railInfo : railwayInfrastructure.getDistinctRailsDetailInfo()) {
             Rail rail = railInfo.third();
             String formatedTrain = "";
@@ -33,7 +33,7 @@ public class ExporterCsv {
             }
             stringBuilder.append(String.format("%s,%s,%s,%1.0f|%s", rail.getName(), railInfo.first(), railInfo.second(), rail.getLength(), formatedTrain)).append("\n");
         }
-        stringBuilder.append(Utils.EDGES_CROSSING_DIVIDER).append("\n");
+        stringBuilder.append(Utils.RAILS_CROSSING_DIVIDER).append("\n");
         for (Crossing crossing : railwayInfrastructure.getCrossings()) {
             stringBuilder.append(String.format("%s,%s,%s", crossing.firstOuter().getName(), crossing.middle().getName(), crossing.secondOuter().getName())).append("\n");
         }

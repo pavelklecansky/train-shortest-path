@@ -12,8 +12,8 @@ import java.util.*;
 public final class Utils {
 
 
-    public static final String VERTICES_EDGES_DIVIDER = "#rails#";
-    public static final String EDGES_CROSSING_DIVIDER = "#crossing#";
+    public static final String RAIL_SWITCHES_RAILS_DIVIDER = "#rails#";
+    public static final String RAILS_CROSSING_DIVIDER = "#crossing#";
 
 
     public static String shortestPathFormat(double length) {
@@ -286,7 +286,7 @@ public final class Utils {
         return dialog;
     }
 
-    public static Dialog<RailDialogReturn> railDialog(List<String> vertices) {
+    public static Dialog<RailDialogReturn> railDialog(List<String> railSwitches) {
         Dialog<RailDialogReturn> dialog = new Dialog<>();
         dialog.setTitle("Add rail");
         dialog.setHeaderText("Add new rail to infrastructure");
@@ -299,25 +299,25 @@ public final class Utils {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        List<String> verticesKey = new ArrayList<>(vertices);
+        List<String> verticesKey = new ArrayList<>(railSwitches);
         Utils.SortForRailsAndRailsSwitches(verticesKey);
 
         TextField railName = new TextField();
 
-        ChoiceBox<String> firstVertex = new ChoiceBox<>();
-        firstVertex.getItems().addAll(verticesKey);
+        ChoiceBox<String> firstRailSwitch = new ChoiceBox<>();
+        firstRailSwitch.getItems().addAll(verticesKey);
 
-        ChoiceBox<String> secondVertex = new ChoiceBox<>();
-        secondVertex.getItems().addAll(verticesKey);
+        ChoiceBox<String> secondRailSwitch = new ChoiceBox<>();
+        secondRailSwitch.getItems().addAll(verticesKey);
 
         TextField numberField = new TextField();
 
         grid.add(new Label("Rail name:"), 0, 0);
         grid.add(railName, 1, 0);
         grid.add(new Label("First rail switch:"), 0, 1);
-        grid.add(firstVertex, 1, 1);
+        grid.add(firstRailSwitch, 1, 1);
         grid.add(new Label("Second rail switch:"), 0, 2);
-        grid.add(secondVertex, 1, 2);
+        grid.add(secondRailSwitch, 1, 2);
         grid.add(new Label("Weight: "), 0, 3);
         grid.add(numberField, 1, 3);
 
@@ -325,7 +325,7 @@ public final class Utils {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addButtonType) {
-                return new RailDialogReturn(railName.getText(), firstVertex.getValue(), secondVertex.getValue(), Double.parseDouble(numberField.getText()));
+                return new RailDialogReturn(railName.getText(), firstRailSwitch.getValue(), secondRailSwitch.getValue(), Double.parseDouble(numberField.getText()));
             }
             return null;
         });

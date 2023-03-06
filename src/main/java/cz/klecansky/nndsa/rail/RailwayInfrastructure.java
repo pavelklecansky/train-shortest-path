@@ -30,7 +30,7 @@ public class RailwayInfrastructure {
     }
 
     public List<Rail> getRails() {
-        return graph.getEdgeValues();
+        return graph.getEdgeValue();
     }
 
     public List<Train> getTrains() {
@@ -64,19 +64,19 @@ public class RailwayInfrastructure {
 
     public List<ShortestPathDisplay> shortestPath(String fromVia, String railSwitchStart, String toVia, String railSwitchEnd, double trainLength) {
         clearDijkstra();
-        Rail startRail = graph.getEdgeValues(railSwitchStart);
+        Rail startRail = graph.getEdgeValue(railSwitchStart);
         if (startRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train cannot have bigger length than starting rail.");
         }
-        Rail endRail = graph.getEdgeValues(railSwitchEnd);
+        Rail endRail = graph.getEdgeValue(railSwitchEnd);
         if (endRail.getVacancy() < trainLength) {
             throw new IllegalArgumentException("Train has not enough space to fit in ending rail.");
         }
         Dijkstra dijkstra = new Dijkstra();
 
-        RailSwitch sourceVertex = getRailSwitch(fromVia);
-        RailSwitch targetVertex = getRailSwitch(toVia);
-        List<ShortestPathDisplay> shortestPathDisplays = dijkstra.computePath(sourceVertex, startRail, targetVertex, endRail, this, trainLength);
+        RailSwitch sourceRailSwitch = getRailSwitch(fromVia);
+        RailSwitch targetRailSwitch = getRailSwitch(toVia);
+        List<ShortestPathDisplay> shortestPathDisplays = dijkstra.computePath(sourceRailSwitch, startRail, targetRailSwitch, endRail, this, trainLength);
 
         ShortestPathDisplay shortestPathDisplay = shortestPathDisplays.get(shortestPathDisplays.size() - 1);
         if (shortestPathDisplay.getMinDistance() == Double.MAX_VALUE) {
@@ -109,7 +109,7 @@ public class RailwayInfrastructure {
     }
 
     public Rail getRail(String rail) {
-        return graph.getEdgeValues(rail);
+        return graph.getEdgeValue(rail);
     }
 
     public void addTrain(Train train) {
