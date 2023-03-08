@@ -165,12 +165,14 @@ public class RailwayInfrastructure {
     }
 
     public void editRail(String key, Rail value) {
-        if (value.getLength() < value.getTrain().getLength()) {
+        if (value.hasTrain() && value.getLength() < value.getTrain().getLength()) {
             throw new IllegalArgumentException("Cannot make rail smaller then train on rail.");
         }
         graph.setEdge(key, value.getName(), value);
         Rail rail = getRail(value.getName());
-        rail.getTrain().setRail(rail.getName());
+        if (rail.hasTrain()) {
+            rail.getTrain().setRail(rail.getName());
+        }
     }
 
     public RailSwitch getRailTarget(String railSwitch, String rail) {
@@ -182,6 +184,6 @@ public class RailwayInfrastructure {
     }
 
     public Rail getRail(String start, String target) {
-        return graph.getEdge(start,target);
+        return graph.getEdge(start, target);
     }
 }

@@ -35,15 +35,8 @@ public final class Utils {
 
         TextField nameField = new TextField();
 
-        ChoiceBox<String> railSwitchType = new ChoiceBox<>();
-        railSwitchType.getItems().addAll(Arrays.stream(RailSwitchType.values()).map(RailSwitchType::name).toList());
-
-
         grid.add(new Label("Name:"), 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label("Rail switch type:"), 0, 1);
-        grid.add(railSwitchType, 1, 1);
-
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
