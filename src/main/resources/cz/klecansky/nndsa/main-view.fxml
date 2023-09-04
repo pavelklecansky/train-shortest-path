@@ -8,67 +8,73 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <HBox fx:id="hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="754.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.klecansky.nndsa.MainController">
    <children>
-      <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="400.0" prefWidth="250.0" style="-fx-background-color: #A0A0A0;">
+      <VBox alignment="TOP_CENTER" maxWidth="300.0" prefHeight="400.0" prefWidth="250.0" styleClass="bg-subtle">
          <children>
-            <Button fx:id="importRailwayInfrastructureButton" mnemonicParsing="false" onAction="#importRailwayInfrastructure" prefHeight="26.0" prefWidth="200.0" text="Import railway infrastructure">
+            <Text fx:id="findValue" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title-1" text="Train Shortest path" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Text>
+            <Button fx:id="importRailwayInfrastructureButton" mnemonicParsing="false" onAction="#importRailwayInfrastructure" prefHeight="26.0" prefWidth="250.0" text="Import railway infrastructure">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Button>
-            <Button fx:id="exportRailwayInfrastructureButton" disable="true" mnemonicParsing="false" onAction="#exportRailwayInfrastructure" prefHeight="26.0" prefWidth="200.0" text="Export railway infrastructure">
+            <Button fx:id="exportRailwayInfrastructureButton" disable="true" mnemonicParsing="false" onAction="#exportRailwayInfrastructure" prefHeight="26.0" prefWidth="250.0" text="Export railway infrastructure">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#addRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Add rail switch">
+            <Button fx:id="addRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#addRailSwitch" prefHeight="26.0" prefWidth="250.0" text="Add rail switch">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="editRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#editRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Edit rail switch">
+            <Button fx:id="editRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#editRailSwitch" prefHeight="26.0" prefWidth="250.0" text="Edit rail switch">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#deleteRailSwitch" prefHeight="26.0" prefWidth="200.0" text="Delete rail switch">
+            <Button fx:id="deleteRailSwitchButton" disable="true" mnemonicParsing="false" onAction="#deleteRailSwitch" prefHeight="26.0" prefWidth="250.0" text="Delete rail switch">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addRailButton" disable="true" mnemonicParsing="false" onAction="#addRail" prefHeight="26.0" prefWidth="200.0" text="Add rail">
+            <Button fx:id="addRailButton" disable="true" mnemonicParsing="false" onAction="#addRail" prefHeight="26.0" prefWidth="250.0" text="Add rail">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="editRailButton" disable="true" mnemonicParsing="false" onAction="#editRail" prefHeight="26.0" prefWidth="200.0" text="Edit rail">
+            <Button fx:id="editRailButton" disable="true" mnemonicParsing="false" onAction="#editRail" prefHeight="26.0" prefWidth="250.0" text="Edit rail">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteRailButton" disable="true" mnemonicParsing="false" onAction="#deleteRail" prefHeight="26.0" prefWidth="200.0" text="Delete rail">
+            <Button fx:id="deleteRailButton" disable="true" mnemonicParsing="false" onAction="#deleteRail" prefHeight="26.0" prefWidth="250.0" text="Delete rail">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="addTrainButton" disable="true" mnemonicParsing="false" onAction="#addTrain" prefHeight="26.0" prefWidth="200.0" text="Add train">
+            <Button fx:id="addTrainButton" disable="true" mnemonicParsing="false" onAction="#addTrain" prefHeight="26.0" prefWidth="250.0" text="Add train">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="editTrainButton" disable="true" mnemonicParsing="false" onAction="#editTrain" prefHeight="26.0" prefWidth="200.0" text="Edit train">
+            <Button fx:id="editTrainButton" disable="true" mnemonicParsing="false" onAction="#editTrain" prefHeight="26.0" prefWidth="250.0" text="Edit train">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="deleteTrainButton" disable="true" mnemonicParsing="false" onAction="#deleteTrain" prefHeight="26.0" prefWidth="200.0" text="Delete train">
+            <Button fx:id="deleteTrainButton" disable="true" mnemonicParsing="false" onAction="#deleteTrain" prefHeight="26.0" prefWidth="250.0" text="Delete train">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="shortestPathButton" disable="true" mnemonicParsing="false" onAction="#shortestPath" prefHeight="25.0" prefWidth="200.0" text="Shortest path">
+            <Button fx:id="shortestPathButton" disable="true" mnemonicParsing="false" onAction="#shortestPath" prefHeight="25.0" prefWidth="250.0" text="Shortest path">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>

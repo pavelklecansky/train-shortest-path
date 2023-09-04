@@ -33,6 +33,7 @@ javafx {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     implementation files('lib/JavaFXSmartGraph-0.9.4.jar')
+    implementation("io.github.mkpaz:atlantafx-base:2.0.1")
 }
 
 test {
